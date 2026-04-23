@@ -53,7 +53,19 @@ if not st.session_state.user:
 # --- UI: MAIN APP ---
 else:
     user = st.session_state.user
-    st.title(f"👟 {user['nickname']}'s Locker Room")
+
+    # --- 1. SIDEBAR (Logout & Info) ---
+    with st.sidebar:
+        st.title(f"👋 {user['nickname']}")
+        st.write(f"**Supporting:** {user['favorite_team']}")
+        if st.button("🚪 Logout", use_container_width=True):
+            st.session_state.user = None
+            st.rerun()
+        st.divider()
+        st.info("Tip: 3 pts for exact score, 1 pt for correct result!")
+
+    # --- 2. MAIN LOCKER ROOM ---
+    st.title("👟 The Locker Room")
     
     fixtures = [
         {"id": "sun_not", "home": "Sunderland", "away": "Nott'm Forest", "time": "Fri 20:00"},
@@ -64,43 +76,39 @@ else:
 
     for f in fixtures:
         with st.container(border=True):
-            st.write(f"📅 {f['time']}")
-            c1, c2, c3 = st.columns([2,1,2])
+            st.write(f"📅 **{f['time']}**")
+            c1, c2, c3 = st.columns([2, 1, 2])
+            
             h_val = c1.number_input(f"{f['home']}", min_value=0, step=1, key=f"{f['id']}_h")
-            c2.write("vs")
+            c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)
             a_val = c3.number_input(f"{f['away']}", min_value=0, step=1, key=f"{f['id']}_a")
             
-            if st.button(f"Lock {f['home']} vs {f['away']}", key=f"btn_{f['id']}"):
+            if st.button(f"Lock {f['home']} vs {f['away']}", key=f"btn_{f['id']}", use_container_width=True):
                 supabase.table("predictions").insert({
                     "player_nickname": user['nickname'],
                     "match_id": f['id'],
                     "home_pred": h_val,
                     "away_pred": a_val
                 }).execute()
-                st.toast(f"Saved {h_val}-{a_val}!")
-# --- UPGRADED LEADERBOARD ---
-st.divider()
-st.header("🏆 The Global Standings")
+                st.balloons()
+                st.toast(f"Prediction saved for {f['home']}!")
+
+    # --- 3. LEADERBOARD ---
+    st.divider()
+    st.header("🏆 The Global Standings")
     
-leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
+    leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
     
-if leaderboard_res.data:
-    cols = st.columns(len(leaderboard_res.data) if len(leaderboard_res.data) < 3 else 3)
-        
-        # Show the Top 3 as "Medalists" if they exist
-    for i, player in enumerate(leaderboard_res.data[:3]):
-            with cols[i]:
+    if leaderboard_res.data:
+        # Top 3 Podium
+        top_cols = st.columns(3)
+        for i, player in enumerate(leaderboard_res.data[:3]):
+            with top_cols[i]:
                 medal = ["🥇", "🥈", "🥉"][i]
                 st.metric(label=f"{medal} {player['nickname']}", value=f"{player['points']} pts")
-                st.caption(f"Supporting: {player['favorite_team']}")
-
-        # The full list below
-    st.write("### Full Table")
-    import pandas as pd
-    df = pd.DataFrame(leaderboard_res.data)
-    df.columns = ["Manager", "Club", "Total Points"]
-    st.dataframe(df, use_container_width=True, hide_index=True)
-# Ensure this is at the same indentation level as the leaderboard code
-if st.button("Logout"):
-    st.session_state.user = None
-    st.rerun()
+        
+        # Full Table
+        import pandas as pd
+        df = pd.DataFrame(leaderboard_res.data)
+        df.columns = ["Manager", "Club", "Points"]
+        st.dataframe(df, use_container_width=True, hide_index=True)

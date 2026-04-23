@@ -78,20 +78,25 @@ else:
                     "away_pred": a_val
                 }).execute()
                 st.toast(f"Saved {h_val}-{a_val}!")
-
-    if st.button("Logout"):
-        st.session_state.user = None
-        st.rerun()
-# --- NEW: LEADERBOARD SECTION ---
-    st.divider()
-    st.subheader("🏆 The Global Standings")
+# --- UPGRADED LEADERBOARD ---
+st.divider()
+st.header("🏆 The Global Standings")
     
-    # Fetch all players sorted by points
     leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
     
     if leaderboard_res.data:
+        cols = st.columns(len(leaderboard_res.data) if len(leaderboard_res.data) < 3 else 3)
+        
+        # Show the Top 3 as "Medalists" if they exist
+        for i, player in enumerate(leaderboard_res.data[:3]):
+            with cols[i]:
+                medal = ["🥇", "🥈", "🥉"][i]
+                st.metric(label=f"{medal} {player['nickname']}", value=f"{player['points']} pts")
+                st.caption(f"Supporting: {player['favorite_team']}")
+
+        # The full list below
+        st.write("### Full Table")
         import pandas as pd
         df = pd.DataFrame(leaderboard_res.data)
-        # Rename columns for the UI
-        df.columns = ["Manager", "Support", "Points"]
-        st.table(df) # This displays a clean, non-editable table
+        df.columns = ["Manager", "Club", "Total Points"]
+        st.dataframe(df, use_container_width=True, hide_index=True)

@@ -88,7 +88,7 @@ if leaderboard_res.data:
     cols = st.columns(len(leaderboard_res.data) if len(leaderboard_res.data) < 3 else 3)
         
         # Show the Top 3 as "Medalists" if they exist
-        for i, player in enumerate(leaderboard_res.data[:3]):
+    for i, player in enumerate(leaderboard_res.data[:3]):
             with cols[i]:
                 medal = ["🥇", "🥈", "🥉"][i]
                 st.metric(label=f"{medal} {player['nickname']}", value=f"{player['points']} pts")

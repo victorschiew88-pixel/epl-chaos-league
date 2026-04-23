@@ -73,8 +73,7 @@ else:
             👟 The Locker Room
         </p>
     """, unsafe_allow_html=True)
-    """, unsafe_allow_html=True)
-    
+     
     fixtures = [
         {"id": "sun_not", "home": "Sunderland", "away": "Nott'm Forest", "time": "Fri 20:00"},
         {"id": "ful_avl", "home": "Fulham", "away": "Aston Villa", "time": "Sat 12:30"},

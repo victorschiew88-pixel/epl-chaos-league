@@ -65,7 +65,7 @@ else:
         st.info("Tip: 3 pts for exact score, 1 pt for correct result!")
 
     # --- 2. MAIN LOCKER ROOM ---
-   st.markdown("""
+    st.markdown("""
         <h1 style='text-align: center; color: #00ff87; margin-bottom: 0px;'>
             🦁 THE EPL CHAOS LEAGUE
         </h1>

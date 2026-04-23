@@ -102,7 +102,7 @@ else:
 
     # --- 3. LEADERBOARD ---
     st.divider()
-    st.header("🏆 The Global Standings")
+    st.header("🏆 The League Table")
     
     leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
     

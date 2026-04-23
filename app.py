@@ -1,42 +1,84 @@
 import streamlit as st
+from supabase import create_client, Client
+
+# --- DB CONNECTION ---
+url = st.secrets["SUPABASE_URL"]
+key = st.secrets["SUPABASE_KEY"]
+supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- REAL FIXTURES: GAMEWEEK 34 ---
-fixtures = [
-    {"home": "Sunderland", "away": "Nott'm Forest", "time": "Friday 20:00"},
-    {"home": "Fulham", "away": "Aston Villa", "time": "Saturday 12:30"},
-    {"home": "West Ham", "away": "Everton", "time": "Saturday 15:00"},
-    {"home": "Wolves", "away": "Spurs", "time": "Saturday 15:00"},
-    {"home": "Liverpool", "away": "Crystal Palace", "time": "Saturday 15:00"},
-    {"home": "Arsenal", "away": "Newcastle", "time": "Saturday 17:30"},
-    {"home": "Man Utd", "away": "Brentford", "time": "Monday 20:00"}
-]
+# --- AUTH LOGIC ---
+if 'user' not in st.session_state:
+    st.session_state.user = None
 
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
+def login(nick, pin):
+    res = supabase.table("players").select("*").eq("nickname", nick).eq("pin", pin).execute()
+    if res.data:
+        st.session_state.user = res.data[0]
+        return True
+    return False
 
-if not st.session_state.logged_in:
+def register(nick, pin, team):
+    try:
+        supabase.table("players").insert({"nickname": nick, "pin": pin, "favorite_team": team}).execute()
+        return True
+    except:
+        return False
+
+# --- UI: GATEWAY ---
+if not st.session_state.user:
     st.title("🏆 THE EPL CHAOS LEAGUE")
-    if st.button("ENTER LOCKER ROOM (DEMO MODE)"):
-        st.session_state.logged_in = True
-        st.rerun()
+    tab1, tab2 = st.tabs(["🏟️ Login", "📝 Register"])
+    
+    with tab2:
+        reg_nick = st.text_input("Choose Nickname")
+        reg_team = st.selectbox("Team", ["Arsenal", "Man City", "Liverpool", "Sunderland", "Newcastle", "Other"])
+        reg_pin = st.text_input("4-Digit PIN", type="password")
+        if st.button("SIGN CONTRACT"):
+            if register(reg_nick, reg_pin, reg_team):
+                st.success("Signed! Now go to the Login tab.")
+            else:
+                st.error("Nickname taken or system error!")
+
+    with tab1:
+        log_nick = st.text_input("Nickname")
+        log_pin = st.text_input("PIN", type="password")
+        if st.button("ENTER LOCKER ROOM"):
+            if login(log_nick, log_pin):
+                st.rerun()
+            else:
+                st.error("Invalid Nickname or PIN.")
+
+# --- UI: MAIN APP ---
 else:
-    st.title("👟 Matchday Predictions")
-    st.write("Gameweek 34 - Squeaky Bum Time!")
+    user = st.session_state.user
+    st.title(f"👟 {user['nickname']}'s Locker Room")
     
-    for match in fixtures:
+    fixtures = [
+        {"id": "sun_not", "home": "Sunderland", "away": "Nott'm Forest", "time": "Fri 20:00"},
+        {"id": "ful_avl", "home": "Fulham", "away": "Aston Villa", "time": "Sat 12:30"},
+        {"id": "whu_eve", "home": "West Ham", "away": "Everton", "time": "Sat 15:00"},
+        {"id": "ars_new", "home": "Arsenal", "away": "Newcastle", "time": "Sat 17:30"}
+    ]
+
+    for f in fixtures:
         with st.container(border=True):
-            st.write(f"⏰ {match['time']}")
-            col1, col2, col3 = st.columns([2, 1, 2])
-            with col1: st.subheader(match['home'])
-            with col2: st.write("### vs")
-            with col3: st.subheader(match['away'])
+            st.write(f"📅 {f['time']}")
+            c1, c2, c3 = st.columns([2,1,2])
+            h_val = c1.number_input(f"{f['home']}", min_value=0, step=1, key=f"{f['id']}_h")
+            c2.write("vs")
+            a_val = c3.number_input(f"{f['away']}", min_value=0, step=1, key=f"{f['id']}_a")
             
-            c1, c2 = st.columns(2)
-            h_score = c1.number_input(f"{match['home']} Score", min_value=0, step=1, key=f"{match['home']}_h")
-            a_score = c2.number_input(f"{match['away']} Score", min_value=0, step=1, key=f"{match['away']}_a")
-    
-    if st.button("LOCK ALL PREDICTIONS"):
-        st.balloons()
-        st.success("All scores saved to the void! (Database coming next)")
+            if st.button(f"Lock {f['home']} vs {f['away']}", key=f"btn_{f['id']}"):
+                supabase.table("predictions").insert({
+                    "player_nickname": user['nickname'],
+                    "match_id": f['id'],
+                    "home_pred": h_val,
+                    "away_pred": a_val
+                }).execute()
+                st.toast(f"Saved {h_val}-{a_val}!")
+
+    if st.button("Logout"):
+        st.session_state.user = None
+        st.rerun()

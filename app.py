@@ -97,6 +97,6 @@ if leaderboard_res.data:
         # The full list below
     st.write("### Full Table")
     import pandas as pd
-        df = pd.DataFrame(leaderboard_res.data)
-        df.columns = ["Manager", "Club", "Total Points"]
-        st.dataframe(df, use_container_width=True, hide_index=True)
+    df = pd.DataFrame(leaderboard_res.data)
+    df.columns = ["Manager", "Club", "Total Points"]
+    st.dataframe(df, use_container_width=True, hide_index=True)

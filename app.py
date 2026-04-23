@@ -84,7 +84,7 @@ st.header("🏆 The Global Standings")
     
 leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
     
-    if leaderboard_res.data:
+if leaderboard_res.data:
     cols = st.columns(len(leaderboard_res.data) if len(leaderboard_res.data) < 3 else 3)
         
         # Show the Top 3 as "Medalists" if they exist

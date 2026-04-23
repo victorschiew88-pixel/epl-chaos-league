@@ -65,7 +65,14 @@ else:
         st.info("Tip: 3 pts for exact score, 1 pt for correct result!")
 
     # --- 2. MAIN LOCKER ROOM ---
-    st.title("👟 The Locker Room")
+   st.markdown("""
+        <h1 style='text-align: center; color: #00ff87; margin-bottom: 0px;'>
+            🦁 THE EPL CHAOS LEAGUE
+        </h1>
+        <p style='text-align: center; color: #38003c; font-size: 24px; font-weight: bold; margin-top: 0px;'>
+            👟 The Locker Room
+        </p>
+    """, unsafe_allow_html=True)
     
     fixtures = [
         {"id": "sun_not", "home": "Sunderland", "away": "Nott'm Forest", "time": "Fri 20:00"},

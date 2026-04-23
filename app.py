@@ -82,3 +82,16 @@ else:
     if st.button("Logout"):
         st.session_state.user = None
         st.rerun()
+# --- NEW: LEADERBOARD SECTION ---
+    st.divider()
+    st.subheader("🏆 The Global Standings")
+    
+    # Fetch all players sorted by points
+    leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
+    
+    if leaderboard_res.data:
+        import pandas as pd
+        df = pd.DataFrame(leaderboard_res.data)
+        # Rename columns for the UI
+        df.columns = ["Manager", "Support", "Points"]
+        st.table(df) # This displays a clean, non-editable table

@@ -1,6 +1,5 @@
 [theme]
-primaryColor = "#38003c"
+primaryColor = "#00ff87" # This makes buttons Electric Green
 backgroundColor = "#0e1117"
 secondaryBackgroundColor = "#1f2937"
 textColor = "#ffffff"
-font = "sans serif"

@@ -82,7 +82,7 @@ else:
 st.divider()
 st.header("🏆 The Global Standings")
     
-    leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
+leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
     
     if leaderboard_res.data:
     cols = st.columns(len(leaderboard_res.data) if len(leaderboard_res.data) < 3 else 3)

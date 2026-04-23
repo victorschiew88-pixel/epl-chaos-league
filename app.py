@@ -69,9 +69,10 @@ else:
         <h1 style='text-align: center; color: #00ff87; margin-bottom: 0px;'>
             🦁 THE EPL CHAOS LEAGUE
         </h1>
-        <p style='text-align: center; color: #38003c; font-size: 24px; font-weight: bold; margin-top: 0px;'>
+        <p style='text-align: center; color: #00f2ff; font-size: 24px; font-weight: bold; margin-top: 0px;'>
             👟 The Locker Room
         </p>
+    """, unsafe_allow_html=True)
     """, unsafe_allow_html=True)
     
     fixtures = [

@@ -95,7 +95,7 @@ if leaderboard_res.data:
                 st.caption(f"Supporting: {player['favorite_team']}")
 
         # The full list below
-        st.write("### Full Table")
+    st.write("### Full Table")
         import pandas as pd
         df = pd.DataFrame(leaderboard_res.data)
         df.columns = ["Manager", "Club", "Total Points"]

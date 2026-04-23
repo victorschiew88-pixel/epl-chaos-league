@@ -100,3 +100,7 @@ if leaderboard_res.data:
     df = pd.DataFrame(leaderboard_res.data)
     df.columns = ["Manager", "Club", "Total Points"]
     st.dataframe(df, use_container_width=True, hide_index=True)
+# Ensure this is at the same indentation level as the leaderboard code
+if st.button("Logout"):
+    st.session_state.user = None
+    st.rerun()

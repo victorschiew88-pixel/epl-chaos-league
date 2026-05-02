@@ -17,7 +17,7 @@ hide_st_style = """
             
             /* Background remains the same */
             .stApp {
-                background: url("https://i.ibb.co/60QZ6j5w/image.jpg");
+                background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;

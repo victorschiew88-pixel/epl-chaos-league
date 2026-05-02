@@ -125,7 +125,7 @@ else:
         fixtures_res = supabase.table("fixtures").select("*").order("deadline").execute()
         fixtures = fixtures_res.data if fixtures_res.data else []
 
-        # 2. Fetch Victor's existing predictions to check status
+        # 2. Fetch user's existing predictions to check status
         pred_res = supabase.table("predictions").select("*").eq("player_nickname", user['nickname']).execute()
         user_preds = {p['match_id']: p for p in pred_res.data} if pred_res.data else {}
 
@@ -135,14 +135,12 @@ else:
 
             with st.container(border=True):
                 status_emoji = "🔒" if is_locked else "🗓️"
-                
-                # PRETTY DATE FIX
                 clean_deadline = pd.to_datetime(f['deadline']).tz_convert("Europe/London").strftime("%a, %d %b - %H:%M")
                 st.write(f"{status_emoji} **Deadline:** {clean_deadline}")
 
                 c1, c2, c3 = st.columns([2, 1, 2])
 
-                # Pre-fill scores if they exist
+                # Memory Logic: Show saved scores if they exist
                 h_def = int(existing_pred['home_pred']) if existing_pred else 0
                 a_def = int(existing_pred['away_pred']) if existing_pred else 0
 
@@ -150,9 +148,9 @@ else:
                 c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)
                 a_val = c3.number_input(f"{f['away_team']}", min_value=0, step=1, value=a_def, key=f"{f['id']}_a", disabled=is_locked)
 
-                # DYNAMIC BUTTON LABEL
+                # Dynamic Labels
                 if is_locked:
-                    btn_label = "LOCKED"
+                    btn_label = "🔒 LOCKED"
                 elif existing_pred:
                     btn_label = f"📝 Edit {f['home_team']} vs {f['away_team']}"
                 else:
@@ -168,9 +166,10 @@ else:
                         }, on_conflict=["player_nickname", "match_id"]).execute()
                         st.balloons()
                         st.toast("Prediction saved!")
+                        st.rerun() 
                     except Exception as e:
                         st.error(f"DATABASE SAYS: {e}")
-
+                                
     # --- TAB 2: THE TABLE ---
     with tabs[1]:
         st.header("🏆 The League Table")

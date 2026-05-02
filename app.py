@@ -144,7 +144,7 @@ else:
         fixtures = fixtures_res.data if fixtures_res.data else []
             
         for f in fixtures:
-                        is_locked = now > f['deadline']
+                        is_locked = now > pd.to_datetime(f['deadline']).tz_localize('UTC').tz_convert("Europe/London")
                         with st.container(border=True):
                             status_emoji = "🔒" if is_locked else "📅"
                             st.write(f"{status_emoji} **{f['deadline']}**")

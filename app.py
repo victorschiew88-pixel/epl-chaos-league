@@ -156,14 +156,18 @@ else:
                             
                             btn_label = "LOCKED" if is_locked else f"Lock {f['home_team']} vs {f['away_team']}"
                             if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
-                                supabase.table("predictions").upsert({
-                                    "player_nickname": user['nickname'],
-                                    "match_id": f['id'],
-                                    "home_pred": h_val,
-                                    "away_pred": a_val
-                                }, on_conflict=["player_nickname", "match_id"]).execute()
-                                st.balloons()
-                                st.toast(f"Prediction saved!")
+                                # DEBUGGER VERSION
+        try:
+            res = supabase.table("predictions").upsert({
+                "player_nickname": user['nickname'],
+                "match_id": f['id'],
+                "home_pred": h_val,
+                "away_pred": a_val
+            }, on_conflict=["player_nickname", "match_id"]).execute()
+            st.balloons()
+            st.toast("Prediction saved!")
+        except Exception as e:
+            st.error(f"DATABASE SAYS: {e}")
 
     # --- TAB 2: THE TABLE ---
     with tabs[1]:

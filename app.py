@@ -8,13 +8,14 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- CUSTOM STYLING ---
+# --- RESPONSIVE STYLING (Works on 55" TV & Phone) ---
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
+            /* The Background Image */
             .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
@@ -23,44 +24,26 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 1. SIDEBAR NUCLEAR OPTION: Force it to the top layer */
-            [data-testid="stSidebar"] {
-                background-color: rgba(0, 0, 0, 0.6) !important;
-                backdrop-filter: blur(15px);
-                z-index: 999999 !important;
-            }
-            
-            /* Add a glowing neon green border to the 'Open' tab so you can't miss it */
-            [data-testid="stSidebarCollapsedControl"] {
-                background-color: #00FF85 !important;
-                color: black !important;
-                z-index: 1000000 !important;
-                border: 2px solid white;
-                border-radius: 0 10px 10px 0;
-            }
-
-            /* 2. CENTER BOX: Slimmed down for large displays */
+            /* The Main Box: Using % instead of px for responsiveness */
             .stMainBlockContainer {
-                max-width: 550px !important; /* Tightened significantly for your 55" screen */
-                background-color: rgba(0, 0, 0, 0.2) !important; /* Very light transparency */
-                padding: 40px !important;
-                border-radius: 30px;
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.15);
-                margin: 50px auto !important;
+                max-width: 90% !important; /* Expansion on large screens */
+                background-color: rgba(0, 0, 0, 0.3) !important; /* Your preferred transparency */
+                padding: 20px !important;
+                border-radius: 20px;
+                backdrop-filter: blur(10px);
+                margin: 20px auto !important;
             }
 
-            /* 3. CLEANUP: Remove inner block shadows and colors */
-            div[data-testid="stVerticalBlock"] > div:has(div.stButton) {
-                background-color: transparent !important;
-                border: none !important;
+            /* THE SIDEBAR FIX: Ensures it stays on its own layer */
+            [data-testid="stSidebar"] {
+                background-color: rgba(15, 15, 15, 0.8) !important;
+                backdrop-filter: blur(15px);
             }
 
-            /* Text styling for 4K clarity */
+            /* Text clarity on the OLED */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 2px 2px 8px rgba(0,0,0,1);
-                font-weight: 500;
+                text-shadow: 1px 1px 5px rgba(0,0,0,0.9);
             }
             </style>
             """

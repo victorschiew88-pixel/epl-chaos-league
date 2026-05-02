@@ -136,7 +136,8 @@ else:
         
         from datetime import datetime
         import pytz
-
+        import pandas as pd
+                
         uk_tz = pytz.timezone("Europe/London")
         now = datetime.now(uk_tz)
         # Fetch fixtures from Supabase
@@ -175,7 +176,6 @@ else:
                     medal = ["🥇", "🥈", "🥉"][i]
                     st.metric(label=f"{medal} {player['nickname']}", value=f"{player['points']} pts")
             
-            import pandas as pd
             df = pd.DataFrame(leaderboard_res.data)
             df.columns = ["Manager", "Club", "Points"]
             st.dataframe(df, use_container_width=True, hide_index=True)

@@ -8,14 +8,18 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE FINAL POLISH: NO CLUTTER & PERFECT POSITIONING ---
+# --- THE GHOST HEADER & PERFECT POSITIONING ---
 hide_st_style = """
             <style>
-            /* 1. NUKE HEADER ICONS & OVERFLOW MENU (Share, Star, GitHub, ⋮) */
+            /* 1. HIDE THE ENTIRE HEADER BUT KEEP THE TOGGLE */
+            [data-testid="stHeader"] {
+                background: rgba(0,0,0,0) !important;
+                color: rgba(0,0,0,0) !important;
+            }
+            
+            /* Target the specific container for Share/Star/GitHub/Menu and kill it */
             [data-testid="stHeaderActionElements"], 
-            .stElementToolbar, 
-            .st-emotion-cache-12fmjuu, 
-            .st-emotion-cache-10pw50,
+            .stElementToolbar,
             header > div:nth-child(2) {
                 display: none !important;
                 visibility: hidden !important;
@@ -23,18 +27,12 @@ hide_st_style = """
 
             /* 2. NUKE THE 'MANAGE APP' BADGE (Bottom Right) */
             [data-testid="stStatusWidget"],
-            .st-emotion-cache-zq5m06,
-            button[title="Manage app"] {
+            button[title="Manage app"],
+            .st-emotion-cache-zq5m06 {
                 display: none !important;
-                visibility: hidden !important;
             }
 
-            /* 3. TRANSPARENT HEADER (Eliminates the 'eating' effect) */
-            header {
-                background-color: rgba(0,0,0,0) !important;
-            }
-            
-            /* 4. THE STADIUM BACKGROUND */
+            /* 3. THE STADIUM BACKGROUND */
             .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
@@ -43,28 +41,28 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 5. THE BOX: Trim the 'head' and push the WHOLE box down */
+            /* 4. THE BOX: Pushed down with Margin, Zero Headroom */
             .block-container {
                 max-width: 600px !important;
-                /* margin-top pushes the entire dark box down from the top */
-                margin-top: 15vh !important; 
-                /* minimal padding-top removes the empty space inside the top of the box */
-                padding-top: 0.5rem !important; 
+                margin-top: 15vh !important; /* Moves the whole glass box down */
+                padding-top: 0px !important; /* Removes the head inside the box */
                 background-color: rgba(0, 0, 0, 0.45) !important;
                 border-radius: 25px;
                 backdrop-filter: blur(15px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* 6. SIDEBAR TOGGLE (>>) - Keeping it neon for easy access */
+            /* 5. SIDEBAR TOGGLE (>>) - The only survivor in the header */
             [data-testid="stSidebarCollapsedControl"] {
                 visibility: visible !important;
+                display: flex !important;
                 background-color: #00FF85 !important;
                 color: black !important;
                 border-radius: 5px;
+                z-index: 999999 !important;
             }
 
-            /* 7. TEXT CLARITY (OLED Optimized) */
+            /* 6. Text Clarity */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
                 text-shadow: 2px 2px 4px rgba(0,0,0,1);

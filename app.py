@@ -8,71 +8,71 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE FINAL, DEFINITIVE UI FIX ---
+# --- THE FINAL ARCHITECTURAL OVERRIDE ---
 hide_st_style = """
             <style>
-            /* 1. COLLAPSE THE HEADER CLUTTER */
-            /* This targets the right-side container of the header and nixes it */
-            [data-testid="stHeader"] > div:nth-child(2) {
-                display: none !important;
-            }
-            
-            /* Nuke the 'Manage app' button and the little status widget */
-            [data-testid="stStatusWidget"], 
-            button[title="Manage app"],
-            footer {
-                display: none !important;
-            }
-
-            /* 2. MAKE THE HEADER LAYER TRANSPARENT & HEIGHTLESS */
-            header {
-                background-color: rgba(0,0,0,0) !important;
+            /* 1. COMPLETELY COLLAPSE THE HEADER AREA */
+            header[data-testid="stHeader"] {
                 height: 0px !important;
+                min-height: 0px !important;
+                background: rgba(0,0,0,0) !important;
+                border: none !important;
             }
 
-            /* 3. THE BOX: Pushed down and trimmed of its 'forehead' */
+            /* 2. THE 'GHOST' WIPE: Force everything on the right to zero-size */
+            /* This targets the toolbar container specifically */
+            section[data-testid="stSidebar"] ~ div header [data-testid="stHeaderActionElements"],
+            header [data-testid="stHeaderActionElements"],
+            .stElementToolbar,
+            .st-emotion-cache-12fmjuu {
+                display: none !important;
+                width: 0px !important;
+                height: 0px !important;
+                overflow: hidden !important;
+            }
+
+            /* 3. NUKE THE BOTTOM BADGE */
+            [data-testid="stStatusWidget"], 
+            button[title="Manage app"] {
+                display: none !important;
+            }
+
+            /* 4. THE BOX: The "No-Forehead" Margin Fix */
             .stMainBlockContainer {
                 max-width: 600px !important;
-                /* margin-top physically moves the glass box down the screen */
-                margin-top: 80px !important; 
-                /* padding-top: 0 removes the internal gap at the top of the dark box */
-                padding-top: 0px !important; 
+                /* This margin physically drops the box down from the very top */
+                margin-top: 120px !important; 
+                padding-top: 0px !important;
                 background-color: rgba(0, 0, 0, 0.45) !important;
                 border-radius: 25px;
                 backdrop-filter: blur(15px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
-                padding-bottom: 2rem !important;
             }
 
-            /* 4. THE STADIUM BACKGROUND */
+            /* 5. THE SIDEBAR TOGGLE: Re-anchored */
+            [data-testid="stSidebarCollapsedControl"] {
+                visibility: visible !important;
+                background-color: #00FF85 !important;
+                color: black !important;
+                border-radius: 5px;
+                position: fixed !important;
+                top: 20px !important;
+                left: 20px !important;
+                z-index: 9999999 !important;
+            }
+
+            /* 6. BACKGROUND & TEXT */
             .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
                 background-position: center;
                 background-attachment: fixed;
             }
-
-            /* 5. THE SIDEBAR TOGGLE (>>) - The only thing allowed to stay */
-            [data-testid="stSidebarCollapsedControl"] {
-                background-color: #00FF85 !important;
-                color: black !important;
-                border-radius: 5px;
-                position: fixed !important;
-                top: 15px !important;
-                left: 15px !important;
-                z-index: 999999 !important;
-            }
-
-            /* Clarity for the OLED */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
                 text-shadow: 2px 2px 4px rgba(0,0,0,1);
             }
-            
-            /* Remove the thin colored line at the very top */
-            [data-testid="stDecoration"] {
-                display: none !important;
-            }
+            [data-testid="stDecoration"], footer { display: none !important; }
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)

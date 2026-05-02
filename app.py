@@ -8,35 +8,28 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE ULTIMATE CLEANUP: NO CLUTTER ---
+# --- THE FINAL CLEANUP & POSITIONING ---
 hide_st_style = """
             <style>
-            /* 1. HIDE THE FOOTER & MAIN MENU */
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-
-            /* 2. HIDE THE RED-SCRIBBLED HEADER ICONS (Share, Star, GitHub, etc.) */
-            /* This targets the right-side container in the top bar */
-            [data-testid="stHeaderActionElements"] {
+            /* 1. Nuke the clutter icons in the top right */
+            [data-testid="stHeaderActionElements"], 
+            .st-emotion-cache-12fmjuu, 
+            .st-emotion-cache-10pw50 {
                 display: none !important;
             }
 
-            /* 3. HIDE THE 'MANAGE APP' BADGE IN THE BOTTOM RIGHT */
-            [data-testid="stStatusWidget"] {
-                visibility: hidden !important;
+            /* 2. Nuke the 'Manage app' button in the bottom right */
+            [data-testid="stStatusWidget"], 
+            .st-emotion-cache-zq5m06 {
                 display: none !important;
             }
 
-            /* 4. KEEP THE SIDEBAR TOGGLE (>>) VISIBLE & CLEAN */
-            [data-testid="stSidebarCollapsedControl"] {
-                visibility: visible !important;
-                background-color: rgba(0, 255, 133, 0.8) !important; /* Neon Green */
-                color: black !important;
-                border-radius: 5px;
-                z-index: 1000001 !important;
+            /* 3. Make the header bar transparent so it doesn't 'eat' the box */
+            header {
+                background-color: rgba(0,0,0,0) !important;
             }
-
-            /* 5. THE STADIUM BACKGROUND */
+            
+            /* 4. The Main Background */
             .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
@@ -45,18 +38,29 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 6. THE "PERFECT SIZE" MAIN BOX (600px) */
+            /* 5. The Box: Perfect Size & Pushed Down */
             .block-container {
                 max-width: 600px !important;
+                padding-top: 6rem !important; /* THIS MOVES THE BOX DOWN */
+                margin: auto;
                 background-color: rgba(0, 0, 0, 0.45) !important;
-                padding: 2rem !important;
                 border-radius: 25px;
                 backdrop-filter: blur(15px);
-                margin: auto;
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* Clarity for the OLED screen */
+            /* 6. Sidebar Styling & Toggle Recovery */
+            [data-testid="stSidebar"] {
+                background-color: #111111 !important;
+            }
+            [data-testid="stSidebarCollapsedControl"] {
+                visibility: visible !important;
+                background-color: #00FF85 !important;
+                color: black !important;
+                border-radius: 5px;
+            }
+
+            /* 7. Text clarity */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
                 text-shadow: 1px 1px 3px black;

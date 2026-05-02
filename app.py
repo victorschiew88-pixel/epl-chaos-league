@@ -8,14 +8,14 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- RESPONSIVE STYLING (Works on 55" TV & Phone) ---
+# --- RESPONSIVE & SIDEBAR RECOVERY ---
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
-            /* The Background Image */
+            /* Background */
             .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
@@ -24,26 +24,37 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* The Main Box: Using % instead of px for responsiveness */
+            /* 1. SIDEBAR RECOVERY: Force it to the front */
+            section[data-testid="stSidebar"] {
+                background-color: rgba(20, 20, 20, 0.9) !important;
+                z-index: 1000 !important;
+                display: block !important;
+                visibility: visible !important;
+            }
+
+            /* 2. THE MENU BUTTON (Mobile & Desktop) */
+            [data-testid="stSidebarCollapsedControl"] {
+                background-color: #00FF85 !important; /* Neon Green */
+                color: black !important;
+                z-index: 1001 !important;
+                border-radius: 0 10px 10px 0;
+            }
+
+            /* 3. MAIN BOX: Responsive Width */
             .stMainBlockContainer {
-                max-width: 88% !important; /* Expansion on large screens */
-                background-color: rgba(0, 0, 0, 0.1) !important; /* Your preferred transparency */
-                padding: 20px !important;
+                max-width: 90% !important;
+                background-color: rgba(0, 0, 0, 0.35) !important;
+                padding: 25px !important;
                 border-radius: 20px;
                 backdrop-filter: blur(10px);
                 margin: 20px auto !important;
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* THE SIDEBAR FIX: Ensures it stays on its own layer */
-            [data-testid="stSidebar"] {
-                background-color: rgba(15, 15, 15, 0.8) !important;
-                backdrop-filter: blur(15px);
-            }
-
-            /* Text clarity on the OLED */
+            /* Text Styling */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 1px 1px 5px rgba(0,0,0,0.9);
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             }
             </style>
             """

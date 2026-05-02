@@ -169,22 +169,35 @@ else:
                         st.rerun() 
                     except Exception as e:
                         st.error(f"DATABASE SAYS: {e}")
-                                
+
     # --- TAB 2: THE TABLE ---
     with tabs[1]:
         st.header("🏆 The League Table")
-        leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
+        
+        # Pull all relevant columns
+        leaderboard_res = supabase.table("players").select("nickname, favorite_team, w, d, l, points").order("points", desc=True).execute()
+        
         if leaderboard_res.data:
+            # Top 3 Metrics
             top_cols = st.columns(3)
             for i, player in enumerate(leaderboard_res.data[:3]):
                 with top_cols[i]:
                     medal = ["🥇", "🥈", "🥉"][i]
                     st.metric(label=f"{medal} {player['nickname']}", value=f"{player['points']} pts")
 
+            # Create the DataFrame
             df = pd.DataFrame(leaderboard_res.data)
-            df.columns = ["Manager", "Club", "Points"]
+            
+            # Calculate Matches Played (MP)
+            df['mp'] = df['w'] + df['d'] + df['l']
+            
+            # Reorder and Rename columns to match your second image
+            df = df[['nickname', 'favorite_team', 'mp', 'w', 'd', 'l', 'points']]
+            df.columns = ["Manager", "Club", "MP", "W", "D", "L", "Pts"]
+            
+            # Display the table
             st.dataframe(df, use_container_width=True, hide_index=True)
-
+                    
     # --- TAB 3: CHAIRMAN'S OFFICE ---
     if len(tabs) > 2:
         with tabs[2]:
@@ -209,13 +222,35 @@ else:
 
                     preds = supabase.table("predictions").select("*").eq("match_id", selected_f['id']).execute()
 
-                    for p in preds.data:
-                        pts = calculate_points(p['home_pred'], p['away_pred'], h_score, a_score)
+    if st.button("🚀 PROCESS RESULTS & AWARD POINTS", use_container_width=True):
+        # FIX: Corrected column names to home_team and away_team
+        selected_f = next(f for f in fixtures if f['home_team'] + " vs " + f['away_team'] == match_to_score)
 
-                        current_player = supabase.table("players").select("points").eq("nickname", p['player_nickname']).execute()
-                        new_total = current_player.data[0]['points'] + pts
+        preds = supabase.table("predictions").select("*").eq("match_id", selected_f['id']).execute()
 
-                        supabase.table("players").update({"points": new_total}).eq("nickname", p['player_nickname']).execute()
+        for p in preds.data:
+            pts = calculate_points(p['home_pred'], p['away_pred'], h_score, a_score)
+                
+            # Determine which stat to increment
+            stat_to_update = ""
+            if pts == 3:
+                stat_to_update = "w" # Exact Score
+            elif pts == 1:
+                stat_to_update = "d" # Correct Result
+            else:
+                stat_to_update = "l" # Incorrect Result
 
-                    st.success(f"Scores processed! Points awarded for {match_to_score}.")
-                    st.balloons()
+            # Fetch current stats
+            curr_data = supabase.table("players").select("points, w, d, l").eq("nickname", p['player_nickname']).execute().data
+            if curr_data:
+                curr = curr_data[0]
+                    
+                # Update database with new points AND the specific W/D/L stat
+                supabase.table("players").update({
+                    "points": curr['points'] + pts,
+                    stat_to_update: curr.get(stat_to_update, 0) + 1
+                }).eq("nickname", p['player_nickname']).execute()
+
+       st.success(f"Scores processed! Points awarded for {match_to_score}.")
+       st.balloons()                   
+                    

@@ -16,7 +16,7 @@ hide_st_style = """
             header {visibility: hidden;}
             
             .stApp {
-                background: url("https://i.ibb.co/k2ZyYNFB/OT.png");
+                background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;

@@ -8,15 +8,15 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE FINAL SIDEBAR RECOVERY ---
+# --- RESPONSIVE SIDEBAR RECOVERY ---
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
-            /* Apply background to the main content area ONLY, not the whole app */
-            .stMain {
+            /* Apply background ONLY to the scrollable main area */
+            .main {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
                 background-position: center;
@@ -24,21 +24,17 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* FORCE SIDEBAR TO BE A SOLID BLOCK AGAIN */
+            /* Force the Sidebar to have a solid, distinct background */
             [data-testid="stSidebar"] {
-                background-color: #111111 !important; /* Solid dark grey/black */
-                width: 300px !important;
-                z-index: 9999 !important;
+                background-color: #111111 !important;
+                border-right: 1px solid #333333;
+                visibility: visible !important;
+                display: block !important;
             }
 
-            /* Make sure the "Open/Close" button is visible and high-contrast */
-            [data-testid="stSidebarCollapsedControl"] {
-                background-color: #ffffff !important;
-                color: #000000 !important;
-                border-radius: 50%;
-                left: 10px;
-                top: 10px;
-                z-index: 10000 !important;
+            /* Ensure the sidebar text is white so it doesn't vanish */
+            [data-testid="stSidebar"] * {
+                color: white !important;
             }
 
             /* The Main Box: Slim and Translucent */
@@ -52,8 +48,8 @@ hide_st_style = """
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* Text Shadows for 4K Clarity */
-            .stMarkdown, p, h1, h2, h3, label {
+            /* Fix for the Table and Text readability */
+            .stMarkdown, p, h1, h2, h3, label, [data-testid="stTable"] {
                 color: white !important;
                 text-shadow: 2px 2px 4px rgba(0,0,0,1);
             }

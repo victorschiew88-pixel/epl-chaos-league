@@ -23,48 +23,44 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 1. SIDEBAR: Frosted glass look + visible open button */
+            /* 1. SIDEBAR NUCLEAR OPTION: Force it to the top layer */
             [data-testid="stSidebar"] {
-                background-color: rgba(0, 0, 0, 0.4) !important;
+                background-color: rgba(0, 0, 0, 0.6) !important;
                 backdrop-filter: blur(15px);
+                z-index: 999999 !important;
             }
             
-            /* Make the 'Open' arrow button stand out */
+            /* Add a glowing neon green border to the 'Open' tab so you can't miss it */
             [data-testid="stSidebarCollapsedControl"] {
-                background-color: rgba(0, 255, 133, 0.8) !important;
+                background-color: #00FF85 !important;
                 color: black !important;
+                z-index: 1000000 !important;
+                border: 2px solid white;
                 border-radius: 0 10px 10px 0;
             }
 
-            /* 2. CENTER BOX: Slimmer and much lighter transparency */
+            /* 2. CENTER BOX: Slimmed down for large displays */
             .stMainBlockContainer {
-                max-width: 650px !important; /* Narrower for a tighter feel */
-                background-color: rgba(0, 0, 0, 0.25) !important; /* Much more transparent */
-                padding: 30px !important;
-                border-radius: 25px;
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                margin-top: 50px;
+                max-width: 550px !important; /* Tightened significantly for your 55" screen */
+                background-color: rgba(0, 0, 0, 0.2) !important; /* Very light transparency */
+                padding: 40px !important;
+                border-radius: 30px;
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                margin: 50px auto !important;
             }
 
-            /* Remove the secondary dark boxes to let the main container breathe */
+            /* 3. CLEANUP: Remove inner block shadows and colors */
             div[data-testid="stVerticalBlock"] > div:has(div.stButton) {
                 background-color: transparent !important;
                 border: none !important;
-                padding: 0px !important;
             }
 
-            /* 3. INPUTS: Contrast for readability */
-            .stNumberInput input {
-                background-color: rgba(0, 0, 0, 0.5) !important;
-                color: #00FF85 !important; /* Bright green text for scores */
-                font-weight: bold;
-            }
-
-            /* Ensure text is sharp and readable */
+            /* Text styling for 4K clarity */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                text-shadow: 2px 2px 8px rgba(0,0,0,1);
+                font-weight: 500;
             }
             </style>
             """

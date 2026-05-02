@@ -163,7 +163,7 @@ else:
                                         "match_id": f['id'],
                                         "home_pred": h_val,
                                         "away_pred": a_val
-                                   }, on_conflict="unique_player_match").execute()
+                                   }, on_conflict="player_nickname,match_id").execute()
                                     st.balloons()
                                     st.toast("Prediction saved!")
                                 except Exception as e:

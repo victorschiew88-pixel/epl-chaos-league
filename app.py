@@ -161,7 +161,7 @@ else:
                                     "match_id": f['id'],
                                     "home_pred": h_val,
                                     "away_pred": a_val
-                                }, on_conflict="player_nickname", "match_id").execute()
+                                }, on_conflict=["player_nickname", "match_id"]).execute()
                                 st.balloons()
                                 st.toast(f"Prediction saved!")
 

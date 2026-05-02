@@ -140,10 +140,10 @@ else:
         uk_tz = pytz.timezone("Europe/London")
         now = datetime.now(uk_tz)
         # Fetch fixtures from Supabase
-                    fixtures_res = supabase.table("fixtures").select("*").order("deadline").execute()
-                    fixtures = fixtures_res.data if fixtures_res.data else []
+        fixtures_res = supabase.table("fixtures").select("*").order("deadline").execute()
+        fixtures = fixtures_res.data if fixtures_res.data else []
             
-                    for f in fixtures:
+        for f in fixtures:
                         is_locked = now > f['deadline']
                         with st.container(border=True):
                             status_emoji = "🔒" if is_locked else "📅"

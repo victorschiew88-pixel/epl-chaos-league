@@ -8,54 +8,54 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- RESPONSIVE CSS RECOVERY ---
+# --- THE ULTIMATE RESPONSIVE RECOVERY ---
 hide_st_style = """
             <style>
-            /* 1. Clean the UI */
+            /* 1. Only hide the specific menu and footer, NOT the header */
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
-            header {visibility: hidden;}
             
-            /* 2. The Background - Applied to the base layer */
+            /* 2. The Background Image */
             .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
                 background-position: center;
+                background-repeat: no-repeat;
                 background-attachment: fixed;
             }
 
-            /* 3. The Main Content 'Card' */
-            /* This is 600px on your C4, but will stay 100% width on your phone */
+            /* 3. THE BOX: The "Perfect Size" (Responsive for TV & Phone) */
             .block-container {
                 max-width: 600px !important;
-                padding: 3rem 1.5rem !important;
-                margin: auto;
-                background-color: rgba(0, 0, 0, 0.35) !important; /* Dark but transparent */
-                backdrop-filter: blur(15px);
+                background-color: rgba(0, 0, 0, 0.45) !important; /* Slightly more transparent as requested */
+                padding: 2rem !important;
                 border-radius: 25px;
+                backdrop-filter: blur(15px);
+                margin: auto;
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* 4. SIDEBAR RECOVERY */
-            /* We force the sidebar to be a solid dark block so it's impossible to miss */
+            /* 4. THE SIDEBAR: Force visibility and layering */
             [data-testid="stSidebar"] {
                 background-color: #111111 !important;
-                z-index: 9999 !important;
+                z-index: 1000000 !important;
             }
 
-            /* Force the 'Open Sidebar' button (hamburger) to stay on top */
+            /* 5. THE SIDEBAR TOGGLE (The "Hamburger" / Arrow) */
+            /* We make it bright Neon Green so it stands out on the OLED */
             [data-testid="stSidebarCollapsedControl"] {
-                background-color: #00FF85 !important; /* Neon Green */
+                background-color: #00FF85 !important;
                 color: black !important;
-                z-index: 10000 !important;
-                border-radius: 0 10px 10px 0;
-                top: 10px;
+                z-index: 1000001 !important;
+                border-radius: 5px;
+                display: flex !important;
+                visibility: visible !important;
             }
 
-            /* 5. Text clarity for the OLED */
+            /* 6. Text clarity */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+                text-shadow: 1px 1px 3px black;
             }
             </style>
             """

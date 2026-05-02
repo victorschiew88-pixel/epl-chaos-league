@@ -8,73 +8,66 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE FINAL GLOBAL HEADER WIPE ---
+# --- THE NUCLEAR UI CLEANUP ---
 hide_st_style = """
             <style>
-            /* 1. HIDE EVERYTHING IN THE TOP HEADER EXCEPT THE TOGGLE */
-            /* We hide the entire right-side container by targeting the header's second div */
-            [data-testid="stHeader"] > div:nth-child(2) {
+            /* 1. THE BIG WIPE: Hide the entire right-side header block by position */
+            header[data-testid="stHeader"] > div:nth-child(2) {
                 display: none !important;
                 visibility: hidden !important;
+                width: 0 !important;
             }
-            
-            /* Additional nuke for the 'Manage app' and 'Viewer' badges */
-            [data-testid="stStatusWidget"], 
-            .st-emotion-cache-zq5m06, 
-            button[title="Manage app"] {
+
+            /* 2. SPECIFIC TARGETS: Catch anything the first rule missed */
+            [data-testid="stHeaderActionElements"], 
+            .stElementToolbar, 
+            [data-testid="stStatusWidget"],
+            button[title="Manage app"],
+            #MainMenu {
                 display: none !important;
             }
 
-            /* 2. STOP THE HEADER FROM OCCUPYING SPACE */
-            /* This prevents the 'yuck' overlap by making the header layer 0px tall */
-            header[data-testid="stHeader"] {
-                height: 0px !important;
-                background: rgba(0,0,0,0) !important;
-            }
-
-            /* 3. THE STADIUM BACKGROUND */
-            .stApp {
-                background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
-            }
-
-            /* 4. THE BOX: Pushed down and trimmed */
-            .block-container {
+            /* 3. THE BOX POSITION: Physically shift the card down */
+            .stMainBlockContainer {
                 max-width: 600px !important;
-                /* margin-top pushes the card down so the tabs aren't in the corner */
-                margin-top: 100px !important; 
-                padding-top: 0px !important; 
+                margin-top: 10vh !important; /* Drops the box down 10% of the screen */
+                padding-top: 0px !important; /* Removes the gap inside the top of the box */
                 background-color: rgba(0, 0, 0, 0.45) !important;
                 border-radius: 25px;
                 backdrop-filter: blur(15px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* 5. SIDEBAR TOGGLE (>>) SURVIVOR STYLE */
+            /* 4. THE BACKGROUND */
+            .stApp {
+                background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+
+            /* 5. SIDEBAR TOGGLE: Move it so it doesn't overlap the box */
             [data-testid="stSidebarCollapsedControl"] {
-                visibility: visible !important;
-                display: flex !important;
-                background-color: #00FF85 !important; /* Neon Green */
+                background-color: #00FF85 !important;
                 color: black !important;
                 border-radius: 5px;
                 position: fixed !important;
-                top: 15px !important;
-                left: 15px !important;
-                z-index: 1000000 !important;
+                top: 20px !important;
+                left: 20px !important;
+                z-index: 999999 !important;
             }
 
-            /* 6. General Cleanup */
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            
-            /* Text clarity for the C4 OLED */
+            /* 6. Text Clarity */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
                 text-shadow: 2px 2px 4px rgba(0,0,0,1);
             }
+            
+            /* Final polish: hide the tiny line at the very top */
+            [data-testid="stDecoration"] {
+                display: none !important;
+            }
+            footer {visibility: hidden;}
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)

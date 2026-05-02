@@ -16,7 +16,7 @@ hide_st_style = """
             header {visibility: hidden;}
             
             .stApp {
-                background: url("YOUR_IMAGE_URL_HERE");
+                background: url("https://ibb.co/60QZ6j5w");
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;

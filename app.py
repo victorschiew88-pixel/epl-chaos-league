@@ -8,6 +8,16 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
+# --- HIDE STREAMLIT BRANDING ---
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 # --- SCORING ENGINE ---
 def calculate_points(home_pred, away_pred, home_actual, away_actual):
     # Exact Score: 3 Points

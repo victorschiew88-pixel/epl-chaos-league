@@ -140,29 +140,29 @@ else:
         uk_tz = pytz.timezone("Europe/London")
         now = datetime.now(uk_tz)
         # Fetch fixtures from Supabase
-        fixtures_res = supabase.table("fixtures").select("*").order("deadline").execute()
-        fixtures = fixtures_res.data if fixtures_res.data else []
-
-        for f in fixtures:
-            is_locked = now > f['deadline']
-            with st.container(border=True):
-                status_emoji = "🔒" if is_locked else "📅"
-                st.write(f"{status_emoji} **{f['deadline']}**")
-                c1, c2, c3 = st.columns([2, 1, 2])
-                h_val = c1.number_input(f"{f['home']}", min_value=0, step=1, key=f"{f['id']}_h", disabled=is_locked)
-                c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)
-                a_val = c3.number_input(f"{f['away']}", min_value=0, step=1, key=f"{f['id']}_a", disabled=is_locked)
-                
-                btn_label = "LOCKED" if is_locked else f"Lock {f['home']} vs {f['away']}"
-                if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
-                    supabase.table("predictions").upsert({
-                        "player_nickname": user['nickname'],
-                        "match_id": f['id'],
-                        "home_pred": h_val,
-                        "away_pred": a_val
-                    }, on_conflict="player_nickname,match_id").execute()
-                    st.balloons()
-                    st.toast(f"Prediction saved!")
+                    fixtures_res = supabase.table("fixtures").select("*").order("deadline").execute()
+                    fixtures = fixtures_res.data if fixtures_res.data else []
+            
+                    for f in fixtures:
+                        is_locked = now > f['deadline']
+                        with st.container(border=True):
+                            status_emoji = "🔒" if is_locked else "📅"
+                            st.write(f"{status_emoji} **{f['deadline']}**")
+                            c1, c2, c3 = st.columns([2, 1, 2])
+                            h_val = c1.number_input(f"{f['home']}", min_value=0, step=1, key=f"{f['id']}_h", disabled=is_locked)
+                            c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)
+                            a_val = c3.number_input(f"{f['away']}", min_value=0, step=1, key=f"{f['id']}_a", disabled=is_locked)
+                            
+                            btn_label = "LOCKED" if is_locked else f"Lock {f['home']} vs {f['away']}"
+                            if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
+                                supabase.table("predictions").upsert({
+                                    "player_nickname": user['nickname'],
+                                    "match_id": f['id'],
+                                    "home_pred": h_val,
+                                    "away_pred": a_val
+                                }, on_conflict="player_nickname,match_id").execute()
+                                st.balloons()
+                                st.toast(f"Prediction saved!")
 
     # --- TAB 2: THE TABLE ---
 with tabs[1]:

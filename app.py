@@ -8,15 +8,15 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- RESPONSIVE SIDEBAR RECOVERY ---
+# --- THE FINAL RECOVERY (PC & MOBILE) ---
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
-            /* Apply background ONLY to the scrollable main area */
-            .main {
+            /* Apply background only to the content area, NOT the sidebar layer */
+            .stMain {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
                 background-position: center;
@@ -24,39 +24,30 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* Force the Sidebar to have a solid, distinct background */
-            [data-testid="stSidebar"] {
-                background-color: #111111 !important;
-                border-right: 1px solid #333333;
-                visibility: visible !important;
-                display: block !important;
+            /* FORCE THE SIDEBAR TO EXIST */
+            section[data-testid="stSidebar"] {
+                background-color: rgba(10, 10, 10, 0.9) !important;
+                z-index: 100 !important;
             }
 
-            /* Ensure the sidebar text is white so it doesn't vanish */
-            [data-testid="stSidebar"] * {
-                color: white !important;
-            }
-
-            /* The Main Box: Slim and Translucent */
+            /* The Main Content Box: Slimmer for the 55" LG C4 */
             .stMainBlockContainer {
                 max-width: 600px !important;
                 background-color: rgba(0, 0, 0, 0.4) !important;
                 padding: 30px !important;
-                border-radius: 25px;
+                border-radius: 20px;
                 backdrop-filter: blur(10px);
                 margin: 40px auto !important;
-                border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* Fix for the Table and Text readability */
-            .stMarkdown, p, h1, h2, h3, label, [data-testid="stTable"] {
+            /* Fix text shadows for readability against the stadium */
+            .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 2px 2px 4px rgba(0,0,0,1);
+                text-shadow: 1px 1px 4px black;
             }
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
-
 # --- SCORING ENGINE ---
 def calculate_points(home_pred, away_pred, home_actual, away_actual):
     # EXACT SCORE: 3 POINTS

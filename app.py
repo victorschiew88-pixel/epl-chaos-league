@@ -8,47 +8,54 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE GHOST LAYER FIX ---
+# --- RESPONSIVE CSS RECOVERY ---
 hide_st_style = """
             <style>
+            /* 1. Clean the UI */
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
-            /* Put the background on a ghost layer behind the app */
-            .stApp::before {
-                content: "";
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
+            /* 2. The Background - Applied to the base layer */
+            .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
                 background-position: center;
-                z-index: -1; /* This keeps it BEHIND everything else */
+                background-attachment: fixed;
             }
 
-            /* The Main Content Box: Responsive and Light */
-            .stMainBlockContainer {
+            /* 3. The Main Content 'Card' */
+            /* This is 600px on your C4, but will stay 100% width on your phone */
+            .block-container {
                 max-width: 600px !important;
-                background-color: rgba(0, 0, 0, 0.4) !important;
-                padding: 30px !important;
+                padding: 3rem 1.5rem !important;
+                margin: auto;
+                background-color: rgba(0, 0, 0, 0.35) !important; /* Dark but transparent */
+                backdrop-filter: blur(15px);
                 border-radius: 25px;
-                backdrop-filter: blur(10px);
-                margin: 40px auto !important;
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* Ensure Sidebar is visible and has a background */
-            section[data-testid="stSidebar"] {
-                background-color: rgba(15, 15, 15, 0.9) !important;
+            /* 4. SIDEBAR RECOVERY */
+            /* We force the sidebar to be a solid dark block so it's impossible to miss */
+            [data-testid="stSidebar"] {
+                background-color: #111111 !important;
+                z-index: 9999 !important;
             }
 
-            /* Text Shadows for Clarity */
+            /* Force the 'Open Sidebar' button (hamburger) to stay on top */
+            [data-testid="stSidebarCollapsedControl"] {
+                background-color: #00FF85 !important; /* Neon Green */
+                color: black !important;
+                z-index: 10000 !important;
+                border-radius: 0 10px 10px 0;
+                top: 10px;
+            }
+
+            /* 5. Text clarity for the OLED */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 2px 2px 4px rgba(0,0,0,1);
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
             }
             </style>
             """

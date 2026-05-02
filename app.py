@@ -8,40 +8,25 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE FINAL ARCHITECTURAL OVERRIDE ---
+# --- THE FINAL ALIGNMENT FIX ---
 hide_st_style = """
             <style>
-            /* 1. COMPLETELY COLLAPSE THE HEADER AREA */
-            header[data-testid="stHeader"] {
-                height: 0px !important;
-                min-height: 0px !important;
-                background: rgba(0,0,0,0) !important;
-                border: none !important;
-            }
-
-            /* 2. THE 'GHOST' WIPE: Force everything on the right to zero-size */
-            /* This targets the toolbar container specifically */
-            section[data-testid="stSidebar"] ~ div header [data-testid="stHeaderActionElements"],
-            header [data-testid="stHeaderActionElements"],
-            .stElementToolbar,
-            .st-emotion-cache-12fmjuu {
-                display: none !important;
-                width: 0px !important;
-                height: 0px !important;
-                overflow: hidden !important;
-            }
-
-            /* 3. NUKE THE BOTTOM BADGE */
-            [data-testid="stStatusWidget"], 
-            button[title="Manage app"] {
+            /* 1. HIDE THE HEADER CLUTTER (RIGHT SIDE) */
+            [data-testid="stHeader"] > div:nth-child(2) {
                 display: none !important;
             }
 
-            /* 4. THE BOX: The "No-Forehead" Margin Fix */
+            /* 2. PREVENT THE HEADER FROM EATING THE BOX */
+            /* We make the header transparent and tell it not to overlap */
+            header {
+                background-color: rgba(0,0,0,0) !important;
+            }
+
+            /* 3. THE "GOLDEN RATIO" POSITIONING */
             .stMainBlockContainer {
                 max-width: 600px !important;
-                /* This margin physically drops the box down from the very top */
-                margin-top: 120px !important; 
+                /* This margin-top is the 'Magic Number' to move the box down */
+                margin-top: 100px !important; 
                 padding-top: 0px !important;
                 background-color: rgba(0, 0, 0, 0.45) !important;
                 border-radius: 25px;
@@ -49,7 +34,15 @@ hide_st_style = """
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* 5. THE SIDEBAR TOGGLE: Re-anchored */
+            /* 4. THE STADIUM BACKGROUND */
+            .stApp {
+                background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+
+            /* 5. SIDEBAR TOGGLE (>>) - Positioned away from the box */
             [data-testid="stSidebarCollapsedControl"] {
                 visibility: visible !important;
                 background-color: #00FF85 !important;
@@ -58,21 +51,19 @@ hide_st_style = """
                 position: fixed !important;
                 top: 20px !important;
                 left: 20px !important;
-                z-index: 9999999 !important;
+                z-index: 1000000 !important;
             }
 
-            /* 6. BACKGROUND & TEXT */
-            .stApp {
-                background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
-                background-size: cover;
-                background-position: center;
-                background-attachment: fixed;
+            /* 6. CLEANUP */
+            [data-testid="stStatusWidget"], [data-testid="stDecoration"], footer {
+                display: none !important;
             }
+            
+            /* OLED Text Optimization */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
                 text-shadow: 2px 2px 4px rgba(0,0,0,1);
             }
-            [data-testid="stDecoration"], footer { display: none !important; }
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)

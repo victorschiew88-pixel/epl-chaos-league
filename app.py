@@ -204,52 +204,56 @@ else:
             st.title("💼 Chairman's Office")
             st.write("Welcome back, Boss. Use this area to manage the league.")
 
-            with st.expander("🏗️ Fixture Management (Coming Soon)"):
-                st.write("This is where we'll add the API automation later today.")
+            with tabs[2]:
+        st.title("💼 Chairman's Office")
+        
+        # Only Victor can see these tools
+        if user['nickname'] == 'victor':
+            with st.expander("⚖️ Admin: Final Result Processing", expanded=True):
+                st.subheader("Confirm Match Results")
 
-            with st.expander("🎰 Enter Final Results"):
-                st.info("Select a match and enter the score to award points.")
+                # Dropdown to pick the match
+                match_options = [f"{f['home_team']} vs {f['away_team']}" for f in fixtures]
+                match_to_score = st.selectbox("Which match just finished?", options=match_options)
 
-                match_to_score = st.selectbox("Select Match", [f['home_team'] + " vs " + f['away_team'] for f in fixtures])
+                # Input the ACTUAL final scores
+                col1, col2 = st.columns(2)
+                with col1:
+                    h_real = st.number_input("Real Home Goals", min_value=0, step=1, key="real_h")
+                with col2:
+                    a_real = st.number_input("Real Away Goals", min_value=0, step=1, key="real_a")
 
-                c1, c2 = st.columns(2)
-                h_score = c1.number_input("Home Score", min_value=0, step=1, key="admin_h")
-                a_score = c2.number_input("Away Score", min_value=0, step=1, key="admin_a")
-
-                if st.button("🚀 PROCESS RESULTS & AWARD POINTS", use_container_width=True):
-                    # FIX: Corrected column names to home_team and away_team
-                    selected_f = next(f for f in fixtures if f['home_team'] + " vs " + f['away_team'] == match_to_score)
-
-                    preds = supabase.table("predictions").select("*").eq("match_id", selected_f['id']).execute()
-
-    if st.button("🚀 PROCESS RESULTS & AWARD POINTS", use_container_width=True, key="admin_process_btn"):
-        # FIX: Corrected column names to home_team and away_team
-        selected_f = next(f for f in fixtures if f['home_team'] + " vs " + f['away_team'] == match_to_score)
-
-        preds = supabase.table("predictions").select("*").eq("match_id", selected_f['id']).execute()
-
-        for p in preds.data:
-            pts = calculate_points(p['home_pred'], p['away_pred'], h_score, a_score)
-                
-            # Determine which stat to increment
-            stat_to_update = ""
-            if pts == 3:
-                stat_to_update = "w" # Exact Score
-            elif pts == 1:
-                stat_to_update = "d" # Correct Result
-            else:
-                stat_to_update = "l" # Incorrect Result
-
-        # Fetch current stats
-        curr_res = supabase.table("players").select("points, w, d, l").eq("nickname", p['player_nickname']).execute()
-        if curr_res.data:
-            curr = curr_res.data[0]
-            
-            supabase.table("players").update({
-                "points": curr['points'] + pts,
-                stat_to_update: curr.get(stat_to_update, 0) + 1
-            }).eq("nickname", p['player_nickname']).execute()
-
-        st.success(f"Scores processed! Points awarded for {match_to_score}.")
-        st.balloons()                   
+                if st.button("🚀 PROCESS RESULTS & AWARD POINTS", use_container_width=True, key="admin_process_btn"):
+                    # Find the specific fixture ID
+                    selected_f = next(f for f in fixtures if f"{f['home_team']} vs {f['away_team']}" == match_to_score)
                     
+                    # Fetch all predictions for this match
+                    preds = supabase.table("predictions").select("*").eq("match_id", str(selected_f['id'])).execute()
+
+                    if preds.data:
+                        for p in preds.data:
+                            # Calculate points using the REAL scores provided above
+                            pts = calculate_points(p['home_pred'], p['away_pred'], h_real, a_real)
+
+                            # Determine which column (w, d, l) to increment
+                            stat_to_update = "l" 
+                            if pts == 3:
+                                stat_to_update = "w"
+                            elif pts == 1:
+                                stat_to_update = "d"
+
+                            # Update the player's record
+                            curr_res = supabase.table("players").select("points, w, d, l").eq("nickname", p['player_nickname']).execute()
+                            if curr_res.data:
+                                curr = curr_res.data[0]
+                                supabase.table("players").update({
+                                    "points": curr['points'] + pts,
+                                    stat_to_update: curr.get(stat_to_update, 0) + 1
+                                }).eq("nickname", p['player_nickname']).execute()
+
+                        st.success(f"Scores processed for {match_to_score}! Result: {h_real}-{a_real}")
+                        st.balloons()
+                    else:
+                        st.warning("No predictions were found for this match.")
+        else:
+            st.warning("Chairman access only. Please return to the Changing Room.")

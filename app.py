@@ -26,7 +26,7 @@ hide_st_style = """
 
             /* The Main Box: Using % instead of px for responsiveness */
             .stMainBlockContainer {
-                max-width: 75% !important; /* Expansion on large screens */
+                max-width: 88% !important; /* Expansion on large screens */
                 background-color: rgba(0, 0, 0, 0.1) !important; /* Your preferred transparency */
                 padding: 20px !important;
                 border-radius: 20px;

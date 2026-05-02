@@ -222,7 +222,7 @@ else:
 
                     preds = supabase.table("predictions").select("*").eq("match_id", selected_f['id']).execute()
 
-    if st.button("🚀 PROCESS RESULTS & AWARD POINTS", use_container_width=True):
+    if st.button("🚀 PROCESS RESULTS & AWARD POINTS", use_container_width=True, key="admin_process_btn"):
         # FIX: Corrected column names to home_team and away_team
         selected_f = next(f for f in fixtures if f['home_team'] + " vs " + f['away_team'] == match_to_score)
 

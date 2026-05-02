@@ -8,15 +8,15 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- RESPONSIVE & SIDEBAR RECOVERY ---
+# --- THE FINAL SIDEBAR RECOVERY ---
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
-            /* Background */
-            .stApp {
+            /* Apply background to the main content area ONLY, not the whole app */
+            .stMain {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
                 background-position: center;
@@ -24,37 +24,38 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 1. SIDEBAR RECOVERY: Force it to the front */
-            section[data-testid="stSidebar"] {
-                background-color: rgba(20, 20, 20, 0.9) !important;
-                z-index: 1000 !important;
-                display: block !important;
-                visibility: visible !important;
+            /* FORCE SIDEBAR TO BE A SOLID BLOCK AGAIN */
+            [data-testid="stSidebar"] {
+                background-color: #111111 !important; /* Solid dark grey/black */
+                width: 300px !important;
+                z-index: 9999 !important;
             }
 
-            /* 2. THE MENU BUTTON (Mobile & Desktop) */
+            /* Make sure the "Open/Close" button is visible and high-contrast */
             [data-testid="stSidebarCollapsedControl"] {
-                background-color: #00FF85 !important; /* Neon Green */
-                color: black !important;
-                z-index: 1001 !important;
-                border-radius: 0 10px 10px 0;
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                border-radius: 50%;
+                left: 10px;
+                top: 10px;
+                z-index: 10000 !important;
             }
 
-            /* 3. MAIN BOX: Responsive Width */
+            /* The Main Box: Slim and Translucent */
             .stMainBlockContainer {
-                max-width: 90% !important;
-                background-color: rgba(0, 0, 0, 0.35) !important;
-                padding: 25px !important;
-                border-radius: 20px;
+                max-width: 600px !important;
+                background-color: rgba(0, 0, 0, 0.4) !important;
+                padding: 30px !important;
+                border-radius: 25px;
                 backdrop-filter: blur(10px);
-                margin: 20px auto !important;
+                margin: 40px auto !important;
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* Text Styling */
+            /* Text Shadows for 4K Clarity */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                text-shadow: 2px 2px 4px rgba(0,0,0,1);
             }
             </style>
             """

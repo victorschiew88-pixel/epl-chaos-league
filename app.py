@@ -156,20 +156,20 @@ else:
                 else:
                     btn_label = f"⚽ Lock {f['home_team']} vs {f['away_team']}"
 
-                if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
-                    try:
-                       res = supabase.table("predictions").upsert({
-                           "player_nickname": user['nickname'],
-                           "match_id": str(f['id']), # Ensure this is a string
-                           "home_pred": h_val,
-                           "away_pred": a_val
-                       }, on_conflict="player_nickname, match_id").execute()
-                       st.balloons()
-                       st.toast("Prediction saved!")
-                       st.rerun() 
-                   except Exception as e: 
-                       st.error(f"DATABASE SAYS: {e}")
-
+            if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
+                try:
+                    res = supabase.table("predictions").upsert({
+                        "player_nickname": user['nickname'],
+                        "match_id": str(f['id']),
+                        "home_pred": h_val,
+                        "away_pred": a_val
+                    }, on_conflict="player_nickname, match_id").execute()
+                    st.balloons()
+                    st.toast("Prediction saved!")
+                    st.rerun()
+                except Exception as e: # This must line up with 'try'
+                    st.error(f"DATABASE SAYS: {e}") # This must be indented inside 'except'                
+                            
     # --- TAB 2: THE TABLE ---
     with tabs[1]:
         st.header("🏆 The League Table")

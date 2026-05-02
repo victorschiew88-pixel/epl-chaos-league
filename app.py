@@ -53,7 +53,7 @@ if not st.session_state.user:
 # --- UI: MAIN APP ---
 else:
     user = st.session_state.user
-
+    
     # --- 1. SIDEBAR (Logout & Info) ---
     with st.sidebar:
         st.title(f"👋 {user['nickname']}")
@@ -64,71 +64,78 @@ else:
         st.divider()
         st.info("Tip: 3 pts for exact score, 1 pt for correct result!")
 
-    # --- 2. MAIN LOCKER ROOM ---
-    st.markdown("""
-        <h1 style='text-align: center; color: #00ff87; margin-bottom: 0px;'>
-            🦁 THE EPL CHAOS LEAGUE
-        </h1>
-        <p style='text-align: center; color: #00f2ff; font-size: 24px; font-weight: bold; margin-top: 0px;'>
-            👟 The Locker Room
-        </p>
-    """, unsafe_allow_html=True)
-     
-    from datetime import datetime
-    import pytz # You might need to add this to requirements.txt later
+    # --- TAB NAVIGATION ---
+    # Only show 'Chairman's Office' if the nickname is yours! 
+    # REPLACE 'YourNickname' with your actual nickname in the quotes below.
+    if user['nickname'] == "victor":
+        tabs = st.tabs(["👟 Changing Room", "🏆 Table", "💼 Chairman's Office"])
+    else:
+        tabs = st.tabs(["👟 Changing Room", "🏆 Table"])
 
-    # Set timezone to UK (BST/GMT)
-    uk_tz = pytz.timezone("Europe/London")
-    now = datetime.now(uk_tz)
-
-    fixtures = [
-        {"id": "sun_not", "home": "Sunderland", "away": "Nott'm Forest", "time": "Fri 20:00", "deadline": uk_tz.localize(datetime(2026, 4, 24, 20, 0))},
-        {"id": "ful_avl", "home": "Fulham", "away": "Aston Villa", "time": "Sat 12:30", "deadline": uk_tz.localize(datetime(2026, 4, 25, 12, 30))},
-        {"id": "whu_eve", "home": "West Ham", "away": "Everton", "time": "Sat 15:00", "deadline": uk_tz.localize(datetime(2026, 4, 25, 15, 0))},
-        {"id": "ars_new", "home": "Arsenal", "away": "Newcastle", "time": "Sat 17:30", "deadline": uk_tz.localize(datetime(2026, 4, 25, 17, 30))}
-    ]
-
-    for f in fixtures:
-        is_locked = now > f['deadline']
+    # --- TAB 1: CHANGING ROOM (The Predictions) ---
+    with tabs[0]:
+        st.markdown("<h1 style='text-align: center; color: #00ff87;'>🦁 THE CHANGING ROOM</h1>", unsafe_allow_html=True)
         
-        with st.container(border=True):
-            status_emoji = "🔒" if is_locked else "📅"
-            st.write(f"{status_emoji} **{f['time']}**")
-            
-            c1, c2, c3 = st.columns([2, 1, 2])
-            
-            h_val = c1.number_input(f"{f['home']}", min_value=0, step=1, key=f"{f['id']}_h", disabled=is_locked)
-            c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)
-            a_val = c3.number_input(f"{f['away']}", min_value=0, step=1, key=f"{f['id']}_a", disabled=is_locked)
-            
-            btn_label = "LOCKED" if is_locked else f"Lock {f['home']} vs {f['away']}"
-            
-            if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
-                supabase.table("predictions").insert({
-                    "player_nickname": user['nickname'],
-                    "match_id": f['id'],
-                    "home_pred": h_val,
-                    "away_pred": a_val
-                }).execute()
-                st.balloons()
-                st.toast(f"Prediction saved for {f['home']}!")
+        from datetime import datetime
+        import pytz
 
-    # --- 3. LEADERBOARD ---
-    st.divider()
-    st.header("🏆 The League Table")
-    
-    leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
-    
-    if leaderboard_res.data:
-        # Top 3 Podium
-        top_cols = st.columns(3)
-        for i, player in enumerate(leaderboard_res.data[:3]):
-            with top_cols[i]:
-                medal = ["🥇", "🥈", "🥉"][i]
-                st.metric(label=f"{medal} {player['nickname']}", value=f"{player['points']} pts")
-        
-        # Full Table
-        import pandas as pd
-        df = pd.DataFrame(leaderboard_res.data)
-        df.columns = ["Manager", "Club", "Points"]
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        uk_tz = pytz.timezone("Europe/London")
+        now = datetime.now(uk_tz)
+
+        # We will move this list to Supabase later today!
+        fixtures = [
+            {"id": "sun_not", "home": "Sunderland", "away": "Nott'm Forest", "time": "Fri 20:00", "deadline": uk_tz.localize(datetime(2026, 4, 24, 20, 0))},
+            {"id": "ful_avl", "home": "Fulham", "away": "Aston Villa", "time": "Sat 12:30", "deadline": uk_tz.localize(datetime(2026, 4, 25, 12, 30))},
+            {"id": "whu_eve", "home": "West Ham", "away": "Everton", "time": "Sat 15:00", "deadline": uk_tz.localize(datetime(2026, 4, 25, 15, 0))},
+            {"id": "ars_new", "home": "Arsenal", "away": "Newcastle", "time": "Sat 17:30", "deadline": uk_tz.localize(datetime(2026, 4, 25, 17, 30))}
+        ]
+
+        for f in fixtures:
+            is_locked = now > f['deadline']
+            with st.container(border=True):
+                status_emoji = "🔒" if is_locked else "📅"
+                st.write(f"{status_emoji} **{f['time']}**")
+                c1, c2, c3 = st.columns([2, 1, 2])
+                h_val = c1.number_input(f"{f['home']}", min_value=0, step=1, key=f"{f['id']}_h", disabled=is_locked)
+                c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)
+                a_val = c3.number_input(f"{f['away']}", min_value=0, step=1, key=f"{f['id']}_a", disabled=is_locked)
+                
+                btn_label = "LOCKED" if is_locked else f"Lock {f['home']} vs {f['away']}"
+                if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
+                    supabase.table("predictions").upsert({
+                        "player_nickname": user['nickname'],
+                        "match_id": f['id'],
+                        "home_pred": h_val,
+                        "away_pred": a_val
+                    }, on_conflict="player_nickname,match_id").execute()
+                    st.balloons()
+                    st.toast(f"Prediction saved!")
+
+    # --- TAB 2: THE TABLE ---
+    with tabs[1]:
+        st.header("🏆 The League Table")
+        leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
+        if leaderboard_res.data:
+            top_cols = st.columns(3)
+            for i, player in enumerate(leaderboard_res.data[:3]):
+                with top_cols[i]:
+                    medal = ["🥇", "🥈", "🥉"][i]
+                    st.metric(label=f"{medal} {player['nickname']}", value=f"{player['points']} pts")
+            
+            import pandas as pd
+            df = pd.DataFrame(leaderboard_res.data)
+            df.columns = ["Manager", "Club", "Points"]
+            st.dataframe(df, use_container_width=True, hide_index=True)
+
+    # --- TAB 3: CHAIRMAN'S OFFICE ---
+    if len(tabs) > 2:
+        with tabs[2]:
+            st.title("💼 Chairman's Office")
+            st.write("Welcome back, Boss. Use this area to manage the league.")
+            
+            with st.expander("🛠️ Fixture Management (Coming Soon)"):
+                st.write("This is where we'll add the API automation later today.")
+            
+            with st.expander("📝 Enter Final Results"):
+                st.info("Input the real scores here to calculate points for everyone.")
+                # We will build the actual scoring engine logic here next!

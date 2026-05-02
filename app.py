@@ -8,46 +8,52 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE FINAL RECOVERY (PC & MOBILE) ---
+# --- THE GHOST LAYER FIX ---
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
-            /* Apply background only to the content area, NOT the sidebar layer */
-            .stMain {
+            /* Put the background on a ghost layer behind the app */
+            .stApp::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
                 background-position: center;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
+                z-index: -1; /* This keeps it BEHIND everything else */
             }
 
-            /* FORCE THE SIDEBAR TO EXIST */
-            section[data-testid="stSidebar"] {
-                background-color: rgba(10, 10, 10, 0.9) !important;
-                z-index: 100 !important;
-            }
-
-            /* The Main Content Box: Slimmer for the 55" LG C4 */
+            /* The Main Content Box: Responsive and Light */
             .stMainBlockContainer {
                 max-width: 600px !important;
                 background-color: rgba(0, 0, 0, 0.4) !important;
                 padding: 30px !important;
-                border-radius: 20px;
+                border-radius: 25px;
                 backdrop-filter: blur(10px);
                 margin: 40px auto !important;
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* Fix text shadows for readability against the stadium */
+            /* Ensure Sidebar is visible and has a background */
+            section[data-testid="stSidebar"] {
+                background-color: rgba(15, 15, 15, 0.9) !important;
+            }
+
+            /* Text Shadows for Clarity */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 1px 1px 4px black;
+                text-shadow: 2px 2px 4px rgba(0,0,0,1);
             }
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
+
 # --- SCORING ENGINE ---
 def calculate_points(home_pred, away_pred, home_actual, away_actual):
     # EXACT SCORE: 3 POINTS

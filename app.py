@@ -137,28 +137,49 @@ else:
         from datetime import datetime
         import pytz
         import pandas as pd
-                
-        uk_tz = pytz.timezone("Europe/London")
-        now = datetime.now(uk_tz)
-        # Fetch fixtures from Supabase
-        fixtures_res = supabase.table("fixtures").select("*").order("deadline").execute()
-        fixtures = fixtures_res.data if fixtures_res.data else []
-    # Fetch user's existing predictions to check for "Locked" vs "Update" status
+ uk_tz = pytz.timezone("Europe/London")
+    now = datetime.now(uk_tz)
+    
+    # 1. Fetch fixtures
+    fixtures_res = supabase.table("fixtures").select("*").order("deadline").execute()
+    fixtures = fixtures_res.data if fixtures_res.data else []
+    
+    # 2. NEW: Fetch Victor's existing predictions to check status
     pred_res = supabase.table("predictions").select("*").eq("player_nickname", user['nickname']).execute()
-    user_preds = {p['match_id']: p for p in pred_res.data}    
-        for f in fixtures:
-                        is_locked = now > pd.to_datetime(f['deadline']).tz_convert("Europe/London")
-                        with st.container(border=True):
-                            status_emoji = "🔒" if is_locked else "📅"
-                            clean_deadline = pd.to_datetime(f['deadline']).tz_convert("Europe/London").strftime("%a, %d %b - %H:%M")
-                            st.write(f"{status_emoji} **Deadline:** {clean_deadline}")
-                            c1, c2, c3 = st.columns([2, 1, 2])
-                            h_val = c1.number_input(f"{f['home_team']}", min_value=0, step=1, key=f"{f['id']}_h", disabled=is_locked)
-                            c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)
-                            a_val = c3.number_input(f"{f['away_team']}", min_value=0, step=1, key=f"{f['id']}_a", disabled=is_locked)
-                            
-                            btn_label = "LOCKED" if is_locked else f"Lock {f['home_team']} vs {f['away_team']}"
-                            if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
+    user_preds = {p['match_id']: p for p in pred_res.data} if pred_res.data else {}
+
+    for f in fixtures:
+        is_locked = now > pd.to_datetime(f['deadline']).tz_convert("Europe/London")
+        
+        # Check if a prediction already exists for this match
+        existing_pred = user_preds.get(f['id'])
+        
+        with st.container(border=True):
+            status_emoji = "🔒" if is_locked else "🗓️"
+            
+            # PRETTY DATE FIX:
+            clean_deadline = pd.to_datetime(f['deadline']).tz_convert("Europe/London").strftime("%a, %d %b - %H:%M")
+            st.write(f"{status_emoji} **Deadline:** {clean_deadline}")
+            
+            c1, c2, c3 = st.columns([2, 1, 2])
+            
+            # Show existing scores if they exist (so Victor doesn't have to re-type them!)
+            h_def = int(existing_pred['home_pred']) if existing_pred else 0
+            a_def = int(existing_pred['away_pred']) if existing_pred else 0
+            
+            h_val = c1.number_input(f"{f['home_team']}", min_value=0, step=1, value=h_def, key=f"{f['id']}_h", disabled=is_locked)
+            c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)
+            a_val = c3.number_input(f"{f['away_team']}", min_value=0, step=1, value=a_def, key=f"{f['id']}_a", disabled=is_locked)
+            
+            # DYNAMIC BUTTON LABEL:
+            if is_locked:
+                btn_label = "LOCKED"
+            elif existing_pred:
+                btn_label = f"📝 Edit {f['home_team']} vs {f['away_team']}"
+            else:
+                btn_label = f"⚽ Lock {f['home_team']} vs {f['away_team']}"
+                
+            if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
                                 # DEBUGGER VERSION
                                 try:
                                     res = supabase.table("predictions").upsert({
@@ -208,7 +229,7 @@ else:
                 
                 if st.button("🏆 PROCESS RESULTS & AWARD POINTS", use_container_width=True):
                     # 2. Identify which fixture we are scoring
-                    selected_f = next(f for f in fixtures if f['home'] + " vs " + f['away'] == match_to_score)
+                    selected_f = next(f for f in fixtures if f['home_team'] + " vs " + f['away_team'] == match_to_score)
                     
                     # 3. Get everyone's predictions for this specific match
                     preds = supabase.table("predictions").select("*").eq("match_id", selected_f['id']).execute()

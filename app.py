@@ -143,12 +143,15 @@ else:
         # Fetch fixtures from Supabase
         fixtures_res = supabase.table("fixtures").select("*").order("deadline").execute()
         fixtures = fixtures_res.data if fixtures_res.data else []
-            
+    # Fetch user's existing predictions to check for "Locked" vs "Update" status
+    pred_res = supabase.table("predictions").select("*").eq("player_nickname", user['nickname']).execute()
+    user_preds = {p['match_id']: p for p in pred_res.data}    
         for f in fixtures:
                         is_locked = now > pd.to_datetime(f['deadline']).tz_convert("Europe/London")
                         with st.container(border=True):
                             status_emoji = "🔒" if is_locked else "📅"
-                            st.write(f"{status_emoji} **{f['deadline']}**")
+                            clean_deadline = pd.to_datetime(f['deadline']).tz_convert("Europe/London").strftime("%a, %d %b - %H:%M")
+                            st.write(f"{status_emoji} **Deadline:** {clean_deadline}")
                             c1, c2, c3 = st.columns([2, 1, 2])
                             h_val = c1.number_input(f"{f['home_team']}", min_value=0, step=1, key=f"{f['id']}_h", disabled=is_locked)
                             c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)

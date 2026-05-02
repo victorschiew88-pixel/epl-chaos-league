@@ -15,7 +15,6 @@ hide_st_style = """
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
-            /* The Main App Background */
             .stApp {
                 background: url("https://i.ibb.co/60QZ6j5w/image.jpg");
                 background-size: cover;
@@ -24,22 +23,31 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* Make the Sidebar visible with a dark blur */
+            /* 1. FORCE THE SIDEBAR TO BE VISIBLE */
             [data-testid="stSidebar"] {
-                background-color: rgba(0, 0, 0, 0.7) !important;
-                backdrop-filter: blur(10px);
+                background-color: rgba(15, 15, 15, 0.95) !important; /* Dark solid-ish background */
+                border-right: 1px solid #333;
             }
 
-            /* Add a 'glass' effect to containers so text is readable */
-            .stElementContainer, .stMarkdown {
+            /* 2. MAKE THE SIDEBAR COLLAPSE/OPEN BUTTON VISIBLE */
+            [data-testid="stSidebarCollapsedControl"] {
+                background-color: rgba(0, 0, 0, 0.7);
+                border-radius: 5px;
                 color: white !important;
             }
-            
+
+            /* 3. Ensure text inside sidebar is white */
+            [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] p {
+                color: white !important;
+            }
+
+            /* Your existing 'Glass' effect for the main content */
             div[data-testid="stVerticalBlock"] > div:has(div.stButton) {
-                background-color: rgba(0, 0, 0, 0.4);
+                background-color: rgba(0, 0, 0, 0.6);
                 padding: 20px;
                 border-radius: 15px;
-                backdrop-filter: blur(5px);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
             </style>
             """

@@ -150,11 +150,11 @@ else:
                             status_emoji = "🔒" if is_locked else "📅"
                             st.write(f"{status_emoji} **{f['deadline']}**")
                             c1, c2, c3 = st.columns([2, 1, 2])
-                            h_val = c1.number_input(f"{f['home']}", min_value=0, step=1, key=f"{f['id']}_h", disabled=is_locked)
+                            h_val = c1.number_input(f"{f['home_team']}", min_value=0, step=1, key=f"{f['id']}_h", disabled=is_locked)
                             c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)
-                            a_val = c3.number_input(f"{f['away']}", min_value=0, step=1, key=f"{f['id']}_a", disabled=is_locked)
+                            a_val = c3.number_input(f"{f['away_team']}", min_value=0, step=1, key=f"{f['id']}_a", disabled=is_locked)
                             
-                            btn_label = "LOCKED" if is_locked else f"Lock {f['home']} vs {f['away']}"
+                            btn_label = "LOCKED" if is_locked else f"Lock {f['home_team']} vs {f['away_team']}"
                             if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
                                 supabase.table("predictions").upsert({
                                     "player_nickname": user['nickname'],
@@ -193,7 +193,7 @@ else:
                 st.info("Select a match and enter the score to award points.")
                 
                 # 1. This picks the match from our list
-                match_to_score = st.selectbox("Select Match", [f['home'] + " vs " + f['away'] for f in fixtures])
+                match_to_score = st.selectbox("Select Match", [f['home_team'] + " vs " + f['away_team'] for f in fixtures])
                 
                 c1, c2 = st.columns(2)
                 h_score = c1.number_input("Home Score", min_value=0, step=1, key="admin_h")

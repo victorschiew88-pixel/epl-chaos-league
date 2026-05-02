@@ -8,6 +8,19 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
+# --- SCORING ENGINE ---
+def calculate_points(home_pred, away_pred, home_actual, away_actual):
+    # Exact Score: 3 Points
+    if home_pred == home_actual and away_pred == away_actual:
+        return 3
+    # Correct Result (Win/Loss/Draw): 1 Point
+    pred_diff = home_pred - away_pred
+    actual_diff = home_actual - away_actual
+    if (pred_diff > 0 and actual_diff > 0) or (pred_diff < 0 and actual_diff < 0) or (pred_diff == 0 and actual_diff == 0):
+        return 1
+    # Wrong Result: 0 Points
+    return 0
+
 # --- AUTH LOGIC ---
 if 'user' not in st.session_state:
     st.session_state.user = None
@@ -137,5 +150,32 @@ else:
                 st.write("This is where we'll add the API automation later today.")
             
             with st.expander("📝 Enter Final Results"):
-                st.info("Input the real scores here to calculate points for everyone.")
-                # We will build the actual scoring engine logic here next!
+                st.info("Select a match and enter the score to award points.")
+                
+                # 1. This picks the match from our list
+                match_to_score = st.selectbox("Select Match", [f['home'] + " vs " + f['away'] for f in fixtures])
+                
+                c1, c2 = st.columns(2)
+                h_score = c1.number_input("Home Score", min_value=0, step=1, key="admin_h")
+                a_score = c2.number_input("Away Score", min_value=0, step=1, key="admin_a")
+                
+                if st.button("🏆 PROCESS RESULTS & AWARD POINTS", use_container_width=True):
+                    # 2. Identify which fixture we are scoring
+                    selected_f = next(f for f in fixtures if f['home'] + " vs " + f['away'] == match_to_score)
+                    
+                    # 3. Get everyone's predictions for this specific match
+                    preds = supabase.table("predictions").select("*").eq("match_id", selected_f['id']).execute()
+                    
+                    for p in preds.data:
+                        # 4. Use the math engine at the top of your file to get the pts
+                        pts = calculate_points(p['home_pred'], p['away_pred'], h_score, a_score)
+                        
+                        # 5. Fetch their current total and add the new points
+                        current_player = supabase.table("players").select("points").eq("nickname", p['player_nickname']).execute()
+                        new_total = current_player.data[0]['points'] + pts
+                        
+                        # 6. Save the new total back to the database
+                        supabase.table("players").update({"points": new_total}).eq("nickname", p['player_nickname']).execute()
+                    
+                    st.success(f"Scores processed! Points awarded for {match_to_score}.")
+                    st.balloons()

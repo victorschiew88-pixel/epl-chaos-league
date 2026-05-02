@@ -240,16 +240,15 @@ else:
             else:
                 stat_to_update = "l" # Incorrect Result
 
-            # Fetch current stats
-            curr_data = supabase.table("players").select("points, w, d, l").eq("nickname", p['player_nickname']).execute().data
-            if curr_data:
-                curr = curr_data[0]
-                    
-                # Update database with new points AND the specific W/D/L stat
-                supabase.table("players").update({
-                    "points": curr['points'] + pts,
-                    stat_to_update: curr.get(stat_to_update, 0) + 1
-                }).eq("nickname", p['player_nickname']).execute()
+        # Fetch current stats
+        curr_res = supabase.table("players").select("points, w, d, l").eq("nickname", p['player_nickname']).execute()
+        if curr_res.data:
+            curr = curr_res.data[0]
+            
+            supabase.table("players").update({
+                "points": curr['points'] + pts,
+                stat_to_update: curr.get(stat_to_update, 0) + 1
+            }).eq("nickname", p['player_nickname']).execute()
 
         st.success(f"Scores processed! Points awarded for {match_to_score}.")
         st.balloons()                   

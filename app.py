@@ -165,7 +165,7 @@ for f in fixtures:
                     st.toast(f"Prediction saved!")
 
     # --- TAB 2: THE TABLE ---
-    with tabs[1]:
+with tabs[1]:
         st.header("🏆 The League Table")
         leaderboard_res = supabase.table("players").select("nickname, favorite_team, points").order("points", desc=True).execute()
         if leaderboard_res.data:

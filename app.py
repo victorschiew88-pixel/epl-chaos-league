@@ -8,25 +8,28 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE FINAL CLEANUP & BOX REPOSITIONING ---
+# --- THE FINAL POLISH: NO CLUTTER & PERFECT POSITIONING ---
 hide_st_style = """
             <style>
-            /* 1. NUKE EVERYTHING IN THE TOP RIGHT (Share, Star, GitHub, Menu) */
+            /* 1. NUKE HEADER ICONS & OVERFLOW MENU (Share, Star, GitHub, ⋮) */
             [data-testid="stHeaderActionElements"], 
-            header > div:nth-child(2),
-            .st-emotion-cache-12fmjuu,
-            .st-emotion-cache-10pw50 {
+            .stElementToolbar, 
+            .st-emotion-cache-12fmjuu, 
+            .st-emotion-cache-10pw50,
+            header > div:nth-child(2) {
                 display: none !important;
                 visibility: hidden !important;
             }
 
-            /* 2. NUKE THE 'MANAGE APP' BUTTON (Bottom Right) */
+            /* 2. NUKE THE 'MANAGE APP' BADGE (Bottom Right) */
             [data-testid="stStatusWidget"],
-            .st-emotion-cache-zq5m06 {
+            .st-emotion-cache-zq5m06,
+            button[title="Manage app"] {
                 display: none !important;
+                visibility: hidden !important;
             }
 
-            /* 3. TRANSPARENT HEADER */
+            /* 3. TRANSPARENT HEADER (Eliminates the 'eating' effect) */
             header {
                 background-color: rgba(0,0,0,0) !important;
             }
@@ -40,34 +43,31 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 5. THE BOX: Moved DOWN and trimmed the 'Head' */
+            /* 5. THE BOX: Trim the 'head' and push the WHOLE box down */
             .block-container {
                 max-width: 600px !important;
-                /* margin-top physically moves the box down from the ceiling */
-                margin-top: 12vh !important; 
-                /* padding-top set to small value to remove the 'massive head' */
-                padding-top: 1rem !important; 
-                padding-bottom: 5rem !important;
+                /* margin-top pushes the entire dark box down from the top */
+                margin-top: 15vh !important; 
+                /* minimal padding-top removes the empty space inside the top of the box */
+                padding-top: 0.5rem !important; 
                 background-color: rgba(0, 0, 0, 0.45) !important;
                 border-radius: 25px;
                 backdrop-filter: blur(15px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* 6. SIDEBAR TOGGLE (>>) RECOVERY */
+            /* 6. SIDEBAR TOGGLE (>>) - Keeping it neon for easy access */
             [data-testid="stSidebarCollapsedControl"] {
                 visibility: visible !important;
                 background-color: #00FF85 !important;
                 color: black !important;
                 border-radius: 5px;
-                margin-top: 10px;
-                margin-left: 10px;
             }
 
-            /* 7. TEXT CLARITY */
+            /* 7. TEXT CLARITY (OLED Optimized) */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 1px 1px 3px black;
+                text-shadow: 2px 2px 4px rgba(0,0,0,1);
             }
             </style>
             """

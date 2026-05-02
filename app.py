@@ -8,19 +8,38 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- CUSTOM STYLING (Branding & Background) ---
+# --- CUSTOM STYLING ---
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
+            /* The Main App Background */
             .stApp {
-                background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
+                background: url("https://i.ibb.co/60QZ6j5w/image.jpg");
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
                 background-attachment: fixed;
+            }
+
+            /* Make the Sidebar visible with a dark blur */
+            [data-testid="stSidebar"] {
+                background-color: rgba(0, 0, 0, 0.7) !important;
+                backdrop-filter: blur(10px);
+            }
+
+            /* Add a 'glass' effect to containers so text is readable */
+            .stElementContainer, .stMarkdown {
+                color: white !important;
+            }
+            
+            div[data-testid="stVerticalBlock"] > div:has(div.stButton) {
+                background-color: rgba(0, 0, 0, 0.4);
+                padding: 20px;
+                border-radius: 15px;
+                backdrop-filter: blur(5px);
             }
             </style>
             """

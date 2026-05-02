@@ -167,7 +167,7 @@ else:
                        st.balloons()
                        st.toast("Prediction saved!")
                        st.rerun() 
-                   except Exception as e:
+                   except Exception as e: 
                        st.error(f"DATABASE SAYS: {e}")
 
     # --- TAB 2: THE TABLE ---

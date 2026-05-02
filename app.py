@@ -164,11 +164,11 @@ else:
                            "home_pred": h_val,
                            "away_pred": a_val
                        }, on_conflict="player_nickname, match_id").execute()
-                        st.balloons()
-                        st.toast("Prediction saved!")
-                        st.rerun() 
-                    except Exception as e:
-                        st.error(f"DATABASE SAYS: {e}")
+                       st.balloons()
+                       st.toast("Prediction saved!")
+                       st.rerun() 
+                   except Exception as e:
+                       st.error(f"DATABASE SAYS: {e}")
 
     # --- TAB 2: THE TABLE ---
     with tabs[1]:

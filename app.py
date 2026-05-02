@@ -23,37 +23,48 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 1. SIDEBAR FIX: Force it to show with a semi-transparent dark tint */
-            section[data-testid="stSidebar"] {
-                background-color: rgba(0, 0, 0, 0.8) !important;
-                backdrop-filter: blur(10px);
-                z-index: 1000 !important;
+            /* 1. SIDEBAR: Frosted glass look + visible open button */
+            [data-testid="stSidebar"] {
+                background-color: rgba(0, 0, 0, 0.4) !important;
+                backdrop-filter: blur(15px);
+            }
+            
+            /* Make the 'Open' arrow button stand out */
+            [data-testid="stSidebarCollapsedControl"] {
+                background-color: rgba(0, 255, 133, 0.8) !important;
+                color: black !important;
+                border-radius: 0 10px 10px 0;
             }
 
-            /* 2. MAIN BOX: Make it slimmer and more transparent */
+            /* 2. CENTER BOX: Slimmer and much lighter transparency */
             .stMainBlockContainer {
-                max-width: 800px !important; /* Makes the center box less wide */
-                padding-top: 2rem !important;
-            }
-
-            div[data-testid="stVerticalBlock"] > div:has(div.stButton) {
-                background-color: rgba(0, 0, 0, 0.45) !important; /* More transparent */
-                padding: 20px;
-                border-radius: 15px;
-                backdrop-filter: blur(8px);
+                max-width: 650px !important; /* Narrower for a tighter feel */
+                background-color: rgba(0, 0, 0, 0.25) !important; /* Much more transparent */
+                padding: 30px !important;
+                border-radius: 25px;
+                backdrop-filter: blur(10px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
+                margin-top: 50px;
             }
 
-            /* 3. BUTTONS & INPUTS: Tweak for readability */
+            /* Remove the secondary dark boxes to let the main container breathe */
+            div[data-testid="stVerticalBlock"] > div:has(div.stButton) {
+                background-color: transparent !important;
+                border: none !important;
+                padding: 0px !important;
+            }
+
+            /* 3. INPUTS: Contrast for readability */
             .stNumberInput input {
-                background-color: rgba(255, 255, 255, 0.1) !important;
-                color: white !important;
+                background-color: rgba(0, 0, 0, 0.5) !important;
+                color: #00FF85 !important; /* Bright green text for scores */
+                font-weight: bold;
             }
 
-            /* Ensure all text is sharp */
+            /* Ensure text is sharp and readable */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
-                text-shadow: 1px 1px 2px black; /* Adds a tiny shadow to make text pop */
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             }
             </style>
             """

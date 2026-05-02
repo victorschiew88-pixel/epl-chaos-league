@@ -8,12 +8,20 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- HIDE STREAMLIT BRANDING ---
+# --- CUSTOM STYLING (Branding & Background) ---
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
+            
+            .stApp {
+                background: url("YOUR_IMAGE_URL_HERE");
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)

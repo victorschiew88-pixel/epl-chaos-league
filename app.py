@@ -8,21 +8,25 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE FINAL CLEANUP & POSITIONING ---
+# --- THE FINAL CLEANUP & BOX REPOSITIONING ---
 hide_st_style = """
             <style>
-            /* 1. NUKE THE HEADER ICONS (Share, Star, GitHub, Three-dots) */
-            /* This targets the entire right side of the top bar */
-            header[data-testid="stHeader"] > div:nth-child(2) {
+            /* 1. NUKE EVERYTHING IN THE TOP RIGHT (Share, Star, GitHub, Menu) */
+            [data-testid="stHeaderActionElements"], 
+            header > div:nth-child(2),
+            .st-emotion-cache-12fmjuu,
+            .st-emotion-cache-10pw50 {
+                display: none !important;
+                visibility: hidden !important;
+            }
+
+            /* 2. NUKE THE 'MANAGE APP' BUTTON (Bottom Right) */
+            [data-testid="stStatusWidget"],
+            .st-emotion-cache-zq5m06 {
                 display: none !important;
             }
 
-            /* 2. NUKE THE 'MANAGE APP' BADGE (Bottom Right) */
-            [data-testid="stStatusWidget"] {
-                display: none !important;
-            }
-
-            /* 3. TRANSPARENT HEADER (Prevents the 'Eating' effect) */
+            /* 3. TRANSPARENT HEADER */
             header {
                 background-color: rgba(0,0,0,0) !important;
             }
@@ -36,11 +40,14 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 5. THE BOX: Move it DOWN (Padding increased to 10rem) */
+            /* 5. THE BOX: Moved DOWN and trimmed the 'Head' */
             .block-container {
                 max-width: 600px !important;
-                padding-top: 10rem !important; /* SIGNIFICANTLY MOVED DOWN */
-                margin: auto;
+                /* margin-top physically moves the box down from the ceiling */
+                margin-top: 12vh !important; 
+                /* padding-top set to small value to remove the 'massive head' */
+                padding-top: 1rem !important; 
+                padding-bottom: 5rem !important;
                 background-color: rgba(0, 0, 0, 0.45) !important;
                 border-radius: 25px;
                 backdrop-filter: blur(15px);
@@ -53,6 +60,8 @@ hide_st_style = """
                 background-color: #00FF85 !important;
                 color: black !important;
                 border-radius: 5px;
+                margin-top: 10px;
+                margin-left: 10px;
             }
 
             /* 7. TEXT CLARITY */

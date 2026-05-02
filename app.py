@@ -77,15 +77,18 @@ if not st.session_state.user:
         reg_team = st.selectbox("Select Your Team", all_teams)
         reg_pin = st.text_input("4-Digit PIN", type="password", max_chars=4)
         if st.button("SIGN CONTRACT"):
-            # Check if PIN is exactly 4 digits and contains only numbers
-            if reg_nick and len(reg_pin) == 4 and reg_pin.isdigit():
+            # 1. Check if nickname is empty
+            if not reg_nick:
+                st.warning("⚠️ Please choose a nickname first!")
+            # 2. Check if PIN is valid
+            elif not (len(reg_pin) == 4 and reg_pin.isdigit()):
+                st.warning("⚠️ Your PIN must be exactly 4 numbers.")
+            # 3. Everything is good, try to register
+            else:
                 if register(reg_nick, reg_pin, reg_team):
                     st.success("Signed! Now go to the Login tab.")
                 else:
                     st.error("Nickname taken or system error!")
-            else:
-                st.warning("⚠️ Your PIN must be exactly 4 numbers.")
-
     with tab1:
         log_nick = st.text_input("Nickname")
         log_pin = st.text_input("PIN", type="password")

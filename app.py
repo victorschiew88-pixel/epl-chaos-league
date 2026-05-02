@@ -251,6 +251,6 @@ else:
                     stat_to_update: curr.get(stat_to_update, 0) + 1
                 }).eq("nickname", p['player_nickname']).execute()
 
-       st.success(f"Scores processed! Points awarded for {match_to_score}.")
-       st.balloons()                   
+        st.success(f"Scores processed! Points awarded for {match_to_score}.")
+        st.balloons()                   
                     

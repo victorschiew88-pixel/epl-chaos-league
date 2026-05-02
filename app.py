@@ -204,9 +204,6 @@ else:
             st.title("💼 Chairman's Office")
             st.write("Welcome back, Boss. Use this area to manage the league.")
 
-            with tabs[2]:
-        st.title("💼 Chairman's Office")
-        
         # Only Victor can see these tools
         if user['nickname'] == 'victor':
             with st.expander("⚖️ Admin: Final Result Processing", expanded=True):

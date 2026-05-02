@@ -15,7 +15,6 @@ hide_st_style = """
             footer {visibility: hidden;}
             header {visibility: hidden;}
             
-            /* Background remains the same */
             .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
@@ -24,40 +23,42 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 1. FORCE SIDEBAR VISIBILITY & LAYERING */
-            [data-testid="stSidebar"] {
-                background-color: rgba(20, 20, 20, 0.98) !important;
-                z-index: 999999 !important; /* Bring it to the very front */
-                display: block !important;
+            /* 1. SIDEBAR FIX: Force it to show with a semi-transparent dark tint */
+            section[data-testid="stSidebar"] {
+                background-color: rgba(0, 0, 0, 0.8) !important;
+                backdrop-filter: blur(10px);
+                z-index: 1000 !important;
             }
 
-            /* 2. THE FLOATING OPEN/CLOSE BUTTON */
-            [data-testid="stSidebarCollapsedControl"] {
-                background-color: #00FF85 !important; /* Bright green like the header */
-                color: black !important;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                display: flex !important;
-                z-index: 1000000 !important;
+            /* 2. MAIN BOX: Make it slimmer and more transparent */
+            .stMainBlockContainer {
+                max-width: 800px !important; /* Makes the center box less wide */
+                padding-top: 2rem !important;
             }
 
-            /* 3. Content Contrast Improvements */
             div[data-testid="stVerticalBlock"] > div:has(div.stButton) {
-                background-color: rgba(0, 0, 0, 0.7);
-                padding: 25px;
-                border-radius: 20px;
-                backdrop-filter: blur(15px);
-                border: 1px solid rgba(0, 255, 133, 0.3); /* Subtle green border */
+                background-color: rgba(0, 0, 0, 0.45) !important; /* More transparent */
+                padding: 20px;
+                border-radius: 15px;
+                backdrop-filter: blur(8px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* Ensure all standard text is white */
+            /* 3. BUTTONS & INPUTS: Tweak for readability */
+            .stNumberInput input {
+                background-color: rgba(255, 255, 255, 0.1) !important;
+                color: white !important;
+            }
+
+            /* Ensure all text is sharp */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
+                text-shadow: 1px 1px 2px black; /* Adds a tiny shadow to make text pop */
             }
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
+
 # --- SCORING ENGINE ---
 def calculate_points(home_pred, away_pred, home_actual, away_actual):
     # EXACT SCORE: 3 POINTS

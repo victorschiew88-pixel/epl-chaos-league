@@ -8,14 +8,35 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE ULTIMATE RESPONSIVE RECOVERY ---
+# --- THE ULTIMATE CLEANUP: NO CLUTTER ---
 hide_st_style = """
             <style>
-            /* 1. Only hide the specific menu and footer, NOT the header */
+            /* 1. HIDE THE FOOTER & MAIN MENU */
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
-            
-            /* 2. The Background Image */
+
+            /* 2. HIDE THE RED-SCRIBBLED HEADER ICONS (Share, Star, GitHub, etc.) */
+            /* This targets the right-side container in the top bar */
+            [data-testid="stHeaderActionElements"] {
+                display: none !important;
+            }
+
+            /* 3. HIDE THE 'MANAGE APP' BADGE IN THE BOTTOM RIGHT */
+            [data-testid="stStatusWidget"] {
+                visibility: hidden !important;
+                display: none !important;
+            }
+
+            /* 4. KEEP THE SIDEBAR TOGGLE (>>) VISIBLE & CLEAN */
+            [data-testid="stSidebarCollapsedControl"] {
+                visibility: visible !important;
+                background-color: rgba(0, 255, 133, 0.8) !important; /* Neon Green */
+                color: black !important;
+                border-radius: 5px;
+                z-index: 1000001 !important;
+            }
+
+            /* 5. THE STADIUM BACKGROUND */
             .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
@@ -24,10 +45,10 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 3. THE BOX: The "Perfect Size" (Responsive for TV & Phone) */
+            /* 6. THE "PERFECT SIZE" MAIN BOX (600px) */
             .block-container {
                 max-width: 600px !important;
-                background-color: rgba(0, 0, 0, 0.45) !important; /* Slightly more transparent as requested */
+                background-color: rgba(0, 0, 0, 0.45) !important;
                 padding: 2rem !important;
                 border-radius: 25px;
                 backdrop-filter: blur(15px);
@@ -35,24 +56,7 @@ hide_st_style = """
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* 4. THE SIDEBAR: Force visibility and layering */
-            [data-testid="stSidebar"] {
-                background-color: #111111 !important;
-                z-index: 1000000 !important;
-            }
-
-            /* 5. THE SIDEBAR TOGGLE (The "Hamburger" / Arrow) */
-            /* We make it bright Neon Green so it stands out on the OLED */
-            [data-testid="stSidebarCollapsedControl"] {
-                background-color: #00FF85 !important;
-                color: black !important;
-                z-index: 1000001 !important;
-                border-radius: 5px;
-                display: flex !important;
-                visibility: visible !important;
-            }
-
-            /* 6. Text clarity */
+            /* Clarity for the OLED screen */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
                 text-shadow: 1px 1px 3px black;

@@ -8,28 +8,28 @@ supabase: Client = create_client(url, key)
 
 st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 
-# --- THE GHOST HEADER & PERFECT POSITIONING ---
+# --- THE FINAL GLOBAL HEADER WIPE ---
 hide_st_style = """
             <style>
-            /* 1. HIDE THE ENTIRE HEADER BUT KEEP THE TOGGLE */
-            [data-testid="stHeader"] {
-                background: rgba(0,0,0,0) !important;
-                color: rgba(0,0,0,0) !important;
-            }
-            
-            /* Target the specific container for Share/Star/GitHub/Menu and kill it */
-            [data-testid="stHeaderActionElements"], 
-            .stElementToolbar,
-            header > div:nth-child(2) {
+            /* 1. HIDE EVERYTHING IN THE TOP HEADER EXCEPT THE TOGGLE */
+            /* We hide the entire right-side container by targeting the header's second div */
+            [data-testid="stHeader"] > div:nth-child(2) {
                 display: none !important;
                 visibility: hidden !important;
             }
-
-            /* 2. NUKE THE 'MANAGE APP' BADGE (Bottom Right) */
-            [data-testid="stStatusWidget"],
-            button[title="Manage app"],
-            .st-emotion-cache-zq5m06 {
+            
+            /* Additional nuke for the 'Manage app' and 'Viewer' badges */
+            [data-testid="stStatusWidget"], 
+            .st-emotion-cache-zq5m06, 
+            button[title="Manage app"] {
                 display: none !important;
+            }
+
+            /* 2. STOP THE HEADER FROM OCCUPYING SPACE */
+            /* This prevents the 'yuck' overlap by making the header layer 0px tall */
+            header[data-testid="stHeader"] {
+                height: 0px !important;
+                background: rgba(0,0,0,0) !important;
             }
 
             /* 3. THE STADIUM BACKGROUND */
@@ -41,28 +41,36 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 4. THE BOX: Pushed down with Margin, Zero Headroom */
+            /* 4. THE BOX: Pushed down and trimmed */
             .block-container {
                 max-width: 600px !important;
-                margin-top: 15vh !important; /* Moves the whole glass box down */
-                padding-top: 0px !important; /* Removes the head inside the box */
+                /* margin-top pushes the card down so the tabs aren't in the corner */
+                margin-top: 100px !important; 
+                padding-top: 0px !important; 
                 background-color: rgba(0, 0, 0, 0.45) !important;
                 border-radius: 25px;
                 backdrop-filter: blur(15px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* 5. SIDEBAR TOGGLE (>>) - The only survivor in the header */
+            /* 5. SIDEBAR TOGGLE (>>) SURVIVOR STYLE */
             [data-testid="stSidebarCollapsedControl"] {
                 visibility: visible !important;
                 display: flex !important;
-                background-color: #00FF85 !important;
+                background-color: #00FF85 !important; /* Neon Green */
                 color: black !important;
                 border-radius: 5px;
-                z-index: 999999 !important;
+                position: fixed !important;
+                top: 15px !important;
+                left: 15px !important;
+                z-index: 1000000 !important;
             }
 
-            /* 6. Text Clarity */
+            /* 6. General Cleanup */
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            
+            /* Text clarity for the C4 OLED */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
                 text-shadow: 2px 2px 4px rgba(0,0,0,1);

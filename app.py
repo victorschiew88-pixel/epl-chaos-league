@@ -139,20 +139,15 @@ else:
 
         uk_tz = pytz.timezone("Europe/London")
         now = datetime.now(uk_tz)
-
-        # We will move this list to Supabase later today!
-        fixtures = [
-            {"id": "sun_not", "home": "Sunderland", "away": "Nott'm Forest", "time": "Fri 20:00", "deadline": uk_tz.localize(datetime(2026, 4, 24, 20, 0))},
-            {"id": "ful_avl", "home": "Fulham", "away": "Aston Villa", "time": "Sat 12:30", "deadline": uk_tz.localize(datetime(2026, 4, 25, 12, 30))},
-            {"id": "whu_eve", "home": "West Ham", "away": "Everton", "time": "Sat 15:00", "deadline": uk_tz.localize(datetime(2026, 4, 25, 15, 0))},
-            {"id": "ars_new", "home": "Arsenal", "away": "Newcastle", "time": "Sat 17:30", "deadline": uk_tz.localize(datetime(2026, 4, 25, 17, 30))}
-        ]
+# Fetch fixtures from Supabase
+fixtures_res = supabase.table("fixtures").select("*").order("deadline").execute()
+fixtures = fixtures_res.data if fixtures_res.data else []
 
         for f in fixtures:
             is_locked = now > f['deadline']
             with st.container(border=True):
                 status_emoji = "🔒" if is_locked else "📅"
-                st.write(f"{status_emoji} **{f['time']}**")
+                st.write(f"{status_emoji} **{f['deadline']}**")
                 c1, c2, c3 = st.columns([2, 1, 2])
                 h_val = c1.number_input(f"{f['home']}", min_value=0, step=1, key=f"{f['id']}_h", disabled=is_locked)
                 c2.markdown("<h3 style='text-align: center; padding-top: 20px;'>vs</h3>", unsafe_allow_html=True)

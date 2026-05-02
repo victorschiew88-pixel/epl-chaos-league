@@ -158,12 +158,12 @@ else:
 
                 if st.button(btn_label, key=f"btn_{f['id']}", use_container_width=True, disabled=is_locked):
                     try:
-                        res = supabase.table("predictions").upsert({
-                            "player_nickname": user['nickname'],
-                            "match_id": f['id'],
-                            "home_pred": h_val,
-                            "away_pred": a_val
-                        }, on_conflict=["player_nickname", "match_id"]).execute()
+                       res = supabase.table("predictions").upsert({
+                           "player_nickname": user['nickname'],
+                           "match_id": str(f['id']), # Ensure this is a string
+                           "home_pred": h_val,
+                           "away_pred": a_val
+                       }, on_conflict="player_nickname, match_id").execute()
                         st.balloons()
                         st.toast("Prediction saved!")
                         st.rerun() 

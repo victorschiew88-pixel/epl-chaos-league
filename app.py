@@ -131,7 +131,7 @@ else:
 
         for f in fixtures:
             is_locked = now > pd.to_datetime(f['deadline']).tz_convert("Europe/London")
-            existing_pred = user_preds.get(f['id'])
+            existing_pred = user_preds.get(str(f['id']))
 
             with st.container(border=True):
                 status_emoji = "🔒" if is_locked else "🗓️"

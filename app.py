@@ -11,25 +11,23 @@ st.set_page_config(page_title="EPL Chaos League", page_icon="⚽")
 # --- THE FINAL CLEANUP & POSITIONING ---
 hide_st_style = """
             <style>
-            /* 1. Nuke the clutter icons in the top right */
-            [data-testid="stHeaderActionElements"], 
-            .st-emotion-cache-12fmjuu, 
-            .st-emotion-cache-10pw50 {
+            /* 1. NUKE THE HEADER ICONS (Share, Star, GitHub, Three-dots) */
+            /* This targets the entire right side of the top bar */
+            header[data-testid="stHeader"] > div:nth-child(2) {
                 display: none !important;
             }
 
-            /* 2. Nuke the 'Manage app' button in the bottom right */
-            [data-testid="stStatusWidget"], 
-            .st-emotion-cache-zq5m06 {
+            /* 2. NUKE THE 'MANAGE APP' BADGE (Bottom Right) */
+            [data-testid="stStatusWidget"] {
                 display: none !important;
             }
 
-            /* 3. Make the header bar transparent so it doesn't 'eat' the box */
+            /* 3. TRANSPARENT HEADER (Prevents the 'Eating' effect) */
             header {
                 background-color: rgba(0,0,0,0) !important;
             }
             
-            /* 4. The Main Background */
+            /* 4. THE STADIUM BACKGROUND */
             .stApp {
                 background: url("https://i.ibb.co/gLvhXvTV/stadium-PM.png");
                 background-size: cover;
@@ -38,10 +36,10 @@ hide_st_style = """
                 background-attachment: fixed;
             }
 
-            /* 5. The Box: Perfect Size & Pushed Down */
+            /* 5. THE BOX: Move it DOWN (Padding increased to 10rem) */
             .block-container {
                 max-width: 600px !important;
-                padding-top: 6rem !important; /* THIS MOVES THE BOX DOWN */
+                padding-top: 10rem !important; /* SIGNIFICANTLY MOVED DOWN */
                 margin: auto;
                 background-color: rgba(0, 0, 0, 0.45) !important;
                 border-radius: 25px;
@@ -49,10 +47,7 @@ hide_st_style = """
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* 6. Sidebar Styling & Toggle Recovery */
-            [data-testid="stSidebar"] {
-                background-color: #111111 !important;
-            }
+            /* 6. SIDEBAR TOGGLE (>>) RECOVERY */
             [data-testid="stSidebarCollapsedControl"] {
                 visibility: visible !important;
                 background-color: #00FF85 !important;
@@ -60,7 +55,7 @@ hide_st_style = """
                 border-radius: 5px;
             }
 
-            /* 7. Text clarity */
+            /* 7. TEXT CLARITY */
             .stMarkdown, p, h1, h2, h3, label {
                 color: white !important;
                 text-shadow: 1px 1px 3px black;

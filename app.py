@@ -181,7 +181,7 @@ with tabs[1]:
             st.dataframe(df, use_container_width=True, hide_index=True)
 
     # --- TAB 3: CHAIRMAN'S OFFICE ---
-    if len(tabs) > 2:
+if len(tabs) > 2:
         with tabs[2]:
             st.title("💼 Chairman's Office")
             st.write("Welcome back, Boss. Use this area to manage the league.")

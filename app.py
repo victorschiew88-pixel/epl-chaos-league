@@ -46,7 +46,35 @@ if not st.session_state.user:
     
     with tab2:
         reg_nick = st.text_input("Choose Nickname")
-        reg_team = st.selectbox("Team", ["Arsenal", "Man City", "Liverpool", "Sunderland", "Newcastle", "Other"])
+        # --- TEAMS LIST (Top 3 Tiers 2025/26) ---
+        premier_league = [
+            "Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton & Hove Albion", 
+            "Burnley", "Chelsea", "Crystal Palace", "Everton", "Fulham", "Leeds United", 
+            "Liverpool", "Man City", "Man Utd", "Newcastle United", "Nottingham Forest", 
+            "Sunderland", "Spurs", "West Ham", "Wolves"
+        ]
+        
+        championship = [
+            "Birmingham City", "Blackburn Rovers", "Bristol City", "Charlton Athletic", 
+            "Coventry City", "Derby County", "Hull City", "Ipswich Town", "Leicester City", 
+            "Middlesbrough", "Millwall", "Norwich City", "Oxford United", "Portsmouth", 
+            "Preston North End", "QPR", "Sheffield United", "Sheffield Wednesday", 
+            "Southampton", "Stoke City", "Swansea City", "Watford", "West Brom", "Wrexham"
+        ]
+        
+        league_one = [
+            "AFC Wimbledon", "Barnsley", "Blackpool", "Bolton Wanderers", "Bradford City", 
+            "Burton Albion", "Cardiff City", "Doncaster Rovers", "Exeter City", 
+            "Huddersfield Town", "Leyton Orient", "Lincoln City", "Luton Town", 
+            "Mansfield Town", "Northampton Town", "Peterborough United", "Plymouth Argyle", 
+            "Port Vale", "Reading", "Rotherham United", "Stevenage", "Stockport County", 
+            "Wigan Athletic", "Wycombe Wanderers"
+        ]
+
+        # Combine all for the dropdown
+        all_teams = sorted(premier_league + championship + league_one) + ["Other"]
+        
+        reg_team = st.selectbox("Select Your Team", all_teams)
         reg_pin = st.text_input("4-Digit PIN", type="password")
         if st.button("SIGN CONTRACT"):
             if register(reg_nick, reg_pin, reg_team):
